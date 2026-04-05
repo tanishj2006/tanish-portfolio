@@ -39,3 +39,23 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# AI Logs
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+
+# Editors and IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Data
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Trashes
+.Spotlight-V100
