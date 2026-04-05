@@ -2,7 +2,7 @@
 
 A modern, responsive, and visually immersive developer portfolio built with **Next.js**, **Three.js**, and **GSAP**. This project focuses on high-end digital experiences, featuring interactive 3D elements and fluid motion.
 
-[Live Demo](https://tanishj2006.vercel.app) | [LinkedIn](https://www.linkedin.com/in/tanish-jain-7b37032bb)
+[Live Demo](https://tanishj-portfolio.vercel.app/) | [LinkedIn](https://www.linkedin.com/in/tanish-jain-7b37032bb)
 
 ---
 
