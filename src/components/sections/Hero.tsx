@@ -8,10 +8,11 @@ import { motion } from "framer-motion";
 import HeroScene from "@/components/canvas/HeroScene";
 import ParticleField from "@/components/canvas/ParticleField";
 import { useMouseParallax } from "@/hooks/useMouseParallax";
-import { globalLenis } from "@/hooks/useLenis";
+import { useSmoothScroll } from "@/components/providers/SmoothScroll";
 import styles from "./Hero.module.css";
 
 export default function Hero() {
+  const { scrollTo } = useSmoothScroll();
   const mouseRef = useMouseParallax();
   const heroRef = useRef<HTMLDivElement>(null);
   
@@ -40,14 +41,11 @@ export default function Hero() {
   }, []);
 
   // 3. Handlers for buttons
+  // `scrollTo` already falls back to native scrolling when Lenis is absent
+  // (reduced-motion, pre-mount), so no branch is needed here.
   const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
     e.preventDefault();
-    if (globalLenis) {
-      globalLenis.scrollTo(target, { duration: 1.2 });
-    } else {
-      // Fallback
-      document.querySelector(target)?.scrollIntoView({ behavior: "smooth" });
-    }
+    scrollTo(target, { duration: 1.2 });
   };
 
   return (

@@ -1,7 +1,6 @@
 "use client";
 // src/app/page.tsx
 import dynamic from "next/dynamic";
-import { useLenis } from "@/hooks/useLenis";
 import NavBar from "@/components/ui/NavBar";
 import About from "@/components/sections/About";
 import Projects from "@/components/sections/Projects";
@@ -32,9 +31,7 @@ const Hero = dynamic(() => import("@/components/sections/Hero"), {
 });
 
 export default function Home() {
-  // Initialize Lenis smooth scrolling (synced to GSAP ticker)
-  useLenis();
-
+  // Smooth scrolling now comes from <SmoothScroll> in src/app/layout.tsx.
   return (
     <main>
       <NavBar />
