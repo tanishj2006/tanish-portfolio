@@ -1,90 +1,444 @@
-/* src/app/globals.css */
+/* src/app/globals.css
+ * ===========================================================================
+ * Portfolio v2 — editorial / brutalist-minimal foundation
+ *
+ * Tailwind v4 is CSS-first: there is no tailwind.config.js. Design tokens are
+ * declared in @theme below, and Tailwind generates the matching utilities
+ * (--color-signal -> bg-signal/text-signal/border-signal, --text-display ->
+ * text-display, --ease-editorial -> ease-editorial, and so on).
+ * ===========================================================================
+ */
 
-/* ─── Google Fonts ─────────────────────────────── */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import "tailwindcss";
 
-/* ─── Design Tokens ────────────────────────────── */
-:root {
-  --bg-oled: #000000;
-  --bg-surface: #0a0a0a;
-  --accent-blue: #0066ff;
-  --accent-glow: #00aaff;
-  --text-primary: #f0f0f0;
-  --text-secondary: #888888;
-  --text-muted: #444444;
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-accent: rgba(0, 102, 255, 0.3);
-  --radius-card: 20px;
-  --radius-btn: 10px;
-  --font-sans: "Inter", system-ui, -apple-system, sans-serif;
-  --font-mono: "SF Mono", "Fira Code", "Cascadia Code", monospace;
+/* ───────────────────────────────────────────────────────────────────────────
+ * DESIGN TOKENS
+ * ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* --- Surfaces ---------------------------------------------------------
+   * Three flat surfaces. No glass, no blur, no gradient. Depth is expressed
+   * with 1px rules and whitespace, never with elevation or translucency.
+   */
+  --color-void: #080808; /* page floor — stark off-black */
+  --color-ink: #0e0e10; /* raised block — dark graphite */
+  --color-bone: #f4f4f0; /* inverted section — bone white */
+
+  /* --- Rules / hairlines ------------------------------------------------
+   * Deliberately below text-contrast thresholds: these are structure, not
+   * content. Pair with a true 1px width (see .rule-* utilities).
+   */
+  --color-rule: #1c1c1c; /* default hairline on dark   (1.18:1) */
+  --color-rule-strong: #2e2e2e; /* emphasis hairline on dark  (1.47:1) */
+  --color-rule-inverse: #d8d8d2; /* hairline on bone */
+
+  /* --- Type colours ----------------------------------------------------
+   * Contrast measured against --color-void (#080808), sRGB WCAG 2.1:
+   *   chalk  18.37:1  AA/AAA any size
+   *   slate   7.94:1  AA/AAA any size
+   *   ash     4.22:1  FAILS AA at body size. Legal only for >=24px, or
+   *                   >=18.66px bold, or non-text UI. Use for mono eyebrows,
+   *                   indices and metadata — never for paragraphs.
+   */
+  --color-chalk: #f5f5f5; /* primary */
+  --color-slate: #a3a3a3; /* muted, safe at body size */
+  --color-ash: #737373; /* muted, large/label only */
+  --color-void-text: #0a0a0a; /* primary text when on bone (15.9:1) */
+  --color-void-muted: #525252; /* muted text when on bone (7.09:1) */
+
+  /* --- Accent -----------------------------------------------------------
+   * One colour, used on under ~5% of any viewport: a rule, a single word, a
+   * cursor, a hover state. Never a fill behind text, never a gradient.
+   *   #ff3e00 on void: 5.67:1 -> AA at any text size.
+   *   #ff3e00 on bone: 3.21:1 -> large text (>=24px) and UI borders ONLY.
+   * To switch the whole site to acid lime, change --color-signal to #d4ff00
+   * and --color-signal-contrast to #080808. Nothing else needs to move.
+   */
+  --color-signal: #ff3e00;
+  --color-signal-contrast: #f5f5f5; /* text colour when ON a signal fill */
+  --color-signal-dim: #b32b00; /* pressed/visited, still >=3:1 on void */
+
+  /* --- Families ---------------------------------------------------------- */
+  --font-display: var(--font-display-src), "Arial Narrow", system-ui, sans-serif;
+  --font-sans: var(--font-sans-src), system-ui, -apple-system, sans-serif;
+  --font-mono: var(--font-mono-src), ui-monospace, "SFMono-Regular", monospace;
+
+  /* --- Type scale --------------------------------------------------------
+   * Fluid, tightening as it grows: display type gets negative tracking and
+   * sub-1 line-height so headlines set as solid editorial blocks. In v4 the
+   * `--text-x--line-height` / `--text-x--letter-spacing` siblings are applied
+   * automatically by the `text-x` utility.
+   */
+  --text-mega: clamp(3.25rem, 13.5vw, 13rem);
+  --text-mega--line-height: 0.82;
+  --text-mega--letter-spacing: -0.05em;
+
+  --text-display: clamp(2.75rem, 8vw, 7rem);
+  --text-display--line-height: 0.87;
+  --text-display--letter-spacing: -0.04em;
+
+  --text-headline: clamp(2rem, 4.5vw, 3.75rem);
+  --text-headline--line-height: 0.95;
+  --text-headline--letter-spacing: -0.03em;
+
+  --text-title: clamp(1.375rem, 2vw, 1.875rem);
+  --text-title--line-height: 1.1;
+  --text-title--letter-spacing: -0.02em;
+
+  --text-lead: clamp(1.0625rem, 1.35vw, 1.3125rem);
+  --text-lead--line-height: 1.5;
+  --text-lead--letter-spacing: -0.013em;
+
+  --text-body: 1rem;
+  --text-body--line-height: 1.6;
+  --text-body--letter-spacing: -0.008em;
+
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --text-caption--letter-spacing: 0em;
+
+  /* Mono eyebrows / indices. Wide tracking, uppercase, set at --color-ash. */
+  --text-label: 0.6875rem;
+  --text-label--line-height: 1;
+  --text-label--letter-spacing: 0.18em;
+
+  --text-label-sm: 0.625rem;
+  --text-label-sm--line-height: 1;
+  --text-label-sm--letter-spacing: 0.22em;
+
+  /* --- Tracking helpers for display type -------------------------------- */
+  --tracking-brutal: -0.055em;
+  --tracking-editorial: -0.035em;
+  --tracking-eyebrow: 0.18em;
+  --tracking-eyebrow-wide: 0.26em;
+
+  /* --- Radii -------------------------------------------------------------
+   * Hard guardrail against the pill/blob look. Tailwind's whole radius scale
+   * is flattened to 0–4px, so `rounded-3xl` typed out of muscle memory
+   * renders as 4px instead of 24px and cannot wreck the geometry.
+   */
+  --radius-none: 0px;
+  --radius-xs: 1px;
+  --radius-sm: 2px;
+  --radius-md: 2px;
+  --radius-lg: 2px;
+  --radius-xl: 3px;
+  --radius-2xl: 3px;
+  --radius-3xl: 4px;
+  --radius-4xl: 4px;
+
+  /* --- Motion -----------------------------------------------------------
+   * Long, decelerating curves. Nothing bounces; nothing overshoots.
+   */
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1); /* expo-out  */
+  --ease-brutal: cubic-bezier(0.87, 0, 0.13, 1); /* expo-in-out */
+  --ease-swift: cubic-bezier(0.4, 0, 0.2, 1);
+
+  --duration-instant: 120ms;
+  --duration-swift: 240ms;
+  --duration-editorial: 640ms;
+  --duration-reveal: 1100ms;
+
+  /* --- Editorial gutters ------------------------------------------------- */
+  --gutter-sm: 1.5rem; /* 24px — base      */
+  --gutter-md: 4rem; /*  64px — >=768px  */
+  --gutter-lg: 6rem; /*  96px — >=1024px */
+  --measure: 68ch; /* max line length for prose */
+
+  /* --- Grain ------------------------------------------------------------- */
+  --grain-opacity: 0.045;
+  --grain-tile: 160px;
 }
 
-/* ─── Reset ─────────────────────────────────────── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ───────────────────────────────────────────────────────────────────────────
+ * LENIS
+ * Verbatim from lenis/dist/lenis.css (v1.3.x), inlined rather than @import-ed
+ * so the build never depends on node_modules CSS resolution.
+ * ─────────────────────────────────────────────────────────────────────────── */
+html.lenis,
+html.lenis body {
+  height: auto;
 }
 
-html {
-  scroll-behavior: auto !important; /* Lenis handles smooth scroll */
-  -webkit-text-size-adjust: 100%;
-  overflow-x: hidden !important;
-  width: 100%;
+.lenis:not(.lenis-autoToggle).lenis-stopped {
+  overflow: clip;
 }
 
-body {
-  background-color: var(--bg-oled);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden !important;
-  width: 100%;
+.lenis [data-lenis-prevent],
+.lenis [data-lenis-prevent-wheel],
+.lenis [data-lenis-prevent-touch],
+.lenis [data-lenis-prevent-vertical],
+.lenis [data-lenis-prevent-horizontal] {
+  overscroll-behavior: contain;
 }
 
-/* ─── Custom Scrollbar ──────────────────────────── */
-::-webkit-scrollbar {
-  width: 4px;
+.lenis.lenis-smooth iframe {
+  pointer-events: none;
 }
 
-::-webkit-scrollbar-track {
-  background: #000;
+.lenis.lenis-autoToggle {
+  transition-property: overflow;
+  transition-duration: 1ms;
+  transition-behavior: allow-discrete;
 }
 
-::-webkit-scrollbar-thumb {
-  background: #0066ff;
-  border-radius: 100px;
+/* ───────────────────────────────────────────────────────────────────────────
+ * BASE
+ * ─────────────────────────────────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    min-width: 0; /* stops flex/grid children forcing horizontal overflow */
+  }
+
+  html {
+    /* `clip`, NOT `hidden`. overflow-x:hidden on the root element silently
+     * turns <html> into a scroll container, which breaks position:sticky and
+     * every GSAP ScrollTrigger pin. `clip` crops without creating one. */
+    overflow-x: clip;
+    -webkit-text-size-adjust: 100%;
+    scrollbar-gutter: stable;
+    /* Lenis owns smooth scrolling; native smooth scroll would fight it. */
+    scroll-behavior: auto;
+    background-color: var(--color-void);
+  }
+
+  body {
+    overflow-x: clip;
+    background-color: var(--color-void);
+    color: var(--color-chalk);
+    font-family: var(--font-sans);
+    font-size: var(--text-body);
+    line-height: var(--text-body--line-height);
+    letter-spacing: var(--text-body--letter-spacing);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Display face owns the headings; tracking tightens as size grows. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: var(--tracking-editorial);
+    line-height: 0.95;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img,
+  video,
+  canvas,
+  svg {
+    display: block;
+    max-width: 100%;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: 0;
+  }
+
+  /* Editorial selection: accent block, never a translucent tint. */
+  ::selection {
+    background-color: var(--color-signal);
+    color: var(--color-signal-contrast);
+  }
+
+  /* Hairline scrollbar in the accent. Firefox gets the standard property. */
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-rule-strong) var(--color-void);
+  }
+
+  ::-webkit-scrollbar {
+    width: 3px;
+    height: 3px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--color-void);
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-rule-strong);
+    border-radius: 0;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-signal);
+  }
+
+  /* Square, offset focus ring — no rounded halo. */
+  :focus-visible {
+    outline: 1px solid var(--color-signal);
+    outline-offset: 3px;
+    border-radius: 0;
+  }
+
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
-/* ─── Selection ─────────────────────────────────── */
-::selection {
-  background: rgba(0, 102, 255, 0.3);
-  color: #fff;
+/* ───────────────────────────────────────────────────────────────────────────
+ * UTILITIES
+ * @utility registers these with Tailwind, so they compose with variants
+ * (hover:, md:, group-hover:) exactly like a built-in class.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+/* Strict editorial gutter — the px-6 md:px-16 lg:px-24 rhythm as one class, so
+ * it cannot drift between sections. */
+@utility gutter {
+  padding-inline: var(--gutter-sm);
+  @media (width >= 48rem) {
+    padding-inline: var(--gutter-md);
+  }
+  @media (width >= 64rem) {
+    padding-inline: var(--gutter-lg);
+  }
 }
 
-/* ─── Focus ─────────────────────────────────────── */
-:focus-visible {
-  outline: 2px solid #0066ff;
-  outline-offset: 3px;
-  border-radius: 4px;
+/* Same rhythm as margin, for full-bleed children that need to pull back in. */
+@utility gutter-x {
+  margin-inline: var(--gutter-sm);
+  @media (width >= 48rem) {
+    margin-inline: var(--gutter-md);
+  }
+  @media (width >= 64rem) {
+    margin-inline: var(--gutter-lg);
+  }
 }
 
-/* ─── Images & Media ─────────────────────────────── */
-img,
-video {
-  max-width: 100%;
+/* True 1px hairlines at any DPR. A Tailwind `border` is 1 CSS px, which on a
+ * 2x/3x screen is 2–3 device px and reads as a bar, not a rule. */
+@utility rule-t {
+  border-top: 1px solid var(--color-rule);
+  @media (min-resolution: 2dppx) {
+    border-top-width: 0.5px;
+  }
+}
+
+@utility rule-b {
+  border-bottom: 1px solid var(--color-rule);
+  @media (min-resolution: 2dppx) {
+    border-bottom-width: 0.5px;
+  }
+}
+
+@utility rule-l {
+  border-left: 1px solid var(--color-rule);
+  @media (min-resolution: 2dppx) {
+    border-left-width: 0.5px;
+  }
+}
+
+@utility rule-r {
+  border-right: 1px solid var(--color-rule);
+  @media (min-resolution: 2dppx) {
+    border-right-width: 0.5px;
+  }
+}
+
+/* Mono eyebrow: uppercase, wide-tracked, muted. The editorial section label. */
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  line-height: var(--text-label--line-height);
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-ash);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Tabular mono for indices/counters so digits never jitter on change. */
+@utility numeric {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "ss01" 1;
+}
+
+/* Prose column capped at a readable measure. */
+@utility measure {
+  max-width: var(--measure);
+}
+
+/* Inverted (bone) section: flips the type tokens so children need no changes. */
+@utility invert-surface {
+  background-color: var(--color-bone);
+  color: var(--color-void-text);
+  --color-chalk: var(--color-void-text);
+  --color-slate: var(--color-void-muted);
+  --color-ash: var(--color-void-muted);
+  --color-rule: var(--color-rule-inverse);
+  --color-rule-strong: #b8b8b2;
+}
+
+/* Clip a line of display type for a mask-reveal (GSAP y-translate inside). */
+@utility line-clip {
   display: block;
+  overflow: hidden;
+  padding-block: 0.08em; /* room for descenders so they aren't shaved */
+  margin-block: -0.08em;
 }
 
-/* ─── Section divider helper ─────────────────────── */
-.divider {
-  width: 100%;
-  height: 1px;
-  background: var(--border-subtle);
+/* ───────────────────────────────────────────────────────────────────────────
+ * TEMPORARY v1 BRIDGE — DELETE WITH THE LAST v1 SECTION
+ *
+ * src/components/sections/*.module.css and ui/*.module.css still read the v1
+ * variable names. These aliases keep the existing page rendering (and the
+ * build green) while sections are rewritten one at a time. They are aliases
+ * only — no new values enter the system through them.
+ *
+ * Remove this block, and the file will fail loudly on any v1 leftover.
+ * Tracked by: npm run lint:design
+ * ─────────────────────────────────────────────────────────────────────────── */
+:root {
+  --bg-oled: var(--color-void);
+  --bg-surface: var(--color-ink);
+  --text-primary: var(--color-chalk);
+  --text-secondary: var(--color-slate);
+  --text-muted: var(--color-ash);
+  --border-subtle: var(--color-rule);
+  --accent-blue: var(--color-signal);
+  --accent-glow: var(--color-signal);
+  --radius-card: 2px;
+  --radius-btn: 0px;
 }
