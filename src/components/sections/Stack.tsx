@@ -63,7 +63,7 @@ export default function Stack() {
                 {row.technologies.map((tech, t) => (
                   <span key={tech} className="inline-flex items-baseline gap-2">
                     {t > 0 && (
-                      <span aria-hidden="true" className="text-rule-strong">
+                      <span aria-hidden="true" className="text-ash">
                         /
                       </span>
                     )}

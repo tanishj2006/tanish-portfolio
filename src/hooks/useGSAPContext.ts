@@ -24,7 +24,7 @@ import { gsap } from "@/lib/gsap";
 type Conditions = Record<string, boolean>;
 
 type ContextArg = {
-  /** Present when `media` is enabled: { motion: boolean, desktop: boolean }. */
+  /** With `media`: { motion, desktop, highContrast } as booleans. */
   conditions?: Conditions;
 };
 
@@ -40,6 +40,10 @@ type Options = {
 const QUERIES = {
   motion: "(prefers-reduced-motion: no-preference)",
   desktop: "(min-width: 768px)",
+  // Distinct from reduced motion: a reader can be happy with animation and
+  // still need contrast. Effects that deliberately hold text below AA — the
+  // manifesto's dim-to-bright scrub — opt out on this.
+  highContrast: "(prefers-contrast: more)",
 };
 
 export function useGSAPContext(

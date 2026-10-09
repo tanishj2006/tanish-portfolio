@@ -35,13 +35,19 @@
    * Contrast measured against --color-void (#080808), sRGB WCAG 2.1:
    *   chalk  18.37:1  AA/AAA any size
    *   slate   7.94:1  AA/AAA any size
-   *   ash     4.22:1  FAILS AA at body size. Legal only for >=24px, or
-   *                   >=18.66px bold, or non-text UI. Use for mono eyebrows,
-   *                   indices and metadata — never for paragraphs.
+   *   ash     4.93:1 on void, 4.75:1 on ink — AA at any size on both
+   *
+   * ash was #737373 (4.22:1) until an axe-core pass caught it failing AA on
+   * 128 nodes: the token was documented as large-text-only, then used for
+   * every 10–11px mono eyebrow, index and metadata label on the site. Raising
+   * it clears 4.5:1 at those sizes and is a shift nobody can see. #7a7a7a
+   * was the first attempt and still failed on --color-ink (4.49:1), which is
+   * the stricter surface — the status widget and the work previews sit on it.
+   * Keep ash at or above #7c7c7c so both surfaces pass.
    */
   --color-chalk: #f5f5f5; /* primary */
   --color-slate: #a3a3a3; /* muted, safe at body size */
-  --color-ash: #737373; /* muted, large/label only */
+  --color-ash: #7e7e7e; /* muted labels, AA on void and ink */
   --color-void-text: #0a0a0a; /* primary text when on bone (15.9:1) */
   --color-void-muted: #525252; /* muted text when on bone (7.09:1) */
 

@@ -110,6 +110,7 @@ export default function Outro() {
             <div className="flex flex-wrap items-stretch gap-3">
               <a
                 href={`mailto:${outro.email}`}
+                aria-label={`Email Tanish Jain at ${outro.email}`}
                 data-lenis-ignore
                 className="group inline-flex items-center gap-3 border border-rule-strong px-5 py-3.5 transition-colors duration-[--duration-swift] ease-swift hover:invert-surface"
               >
@@ -126,6 +127,11 @@ export default function Outro() {
               <button
                 type="button"
                 onClick={copyEmail}
+                aria-label={
+                  copied
+                    ? "Email address copied to clipboard"
+                    : "Copy email address"
+                }
                 // Width-locked so the COPY -> COPIED swap cannot resize the row.
                 className="inline-flex w-[13ch] items-center justify-center gap-2 border border-rule px-4 py-3.5 eyebrow text-ash transition-colors duration-[--duration-swift] ease-swift hover:border-rule-strong hover:text-chalk"
               >
@@ -148,6 +154,7 @@ export default function Outro() {
                     href={s.href}
                     target="_blank"
                     rel="noreferrer noopener"
+                    aria-label={`${s.label} — ${s.handle} (opens in a new tab)`}
                     data-lenis-ignore
                     className="group flex items-baseline gap-4 rule-b px-1 py-5 transition-colors duration-[--duration-swift] ease-swift hover:invert-surface"
                   >
@@ -189,6 +196,7 @@ export default function Outro() {
         <button
           type="button"
           onClick={() => scrollTo(0)}
+          aria-label="Back to top of page"
           className="group inline-flex items-center gap-2 eyebrow text-ash transition-colors duration-[--duration-swift] ease-swift hover:text-signal md:justify-end"
         >
           BACK TO TOP

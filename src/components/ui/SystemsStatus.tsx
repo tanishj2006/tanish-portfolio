@@ -97,6 +97,14 @@ export default function SystemsStatus() {
         <button
           type="button"
           onClick={onCopy}
+          // The visible label is "COPY"; on its own that does not say what is
+          // being copied. The label also carries the result, so a screen
+          // reader on the focused button hears the state change.
+          aria-label={
+            copied
+              ? "Systems status readout copied to clipboard"
+              : "Copy systems status readout"
+          }
           className="eyebrow w-[7ch] text-right text-ash transition-colors duration-[--duration-swift] ease-swift hover:text-signal"
         >
           {copied ? "COPIED" : "COPY"}

@@ -37,9 +37,17 @@ export default function Manifesto() {
       const words = gsap.utils.toArray<HTMLElement>("[data-word]");
       if (!words.length) return;
 
-      // Reduced motion: no pin, no scrub, no scroll hijack. The statement is
-      // simply legible at full contrast.
-      if (!ctx.conditions?.motion) {
+      // Two ways out of the scrub, both landing on the same static, fully
+      // legible statement:
+      //   reduced motion  — no pin, no scrub, no scroll hijack.
+      //   prefers-contrast: more — the dim state is #262626 on #080808,
+      //     about 1.3:1. Raising it to clear AA needs roughly 0.5 opacity,
+      //     which erases the distinction between read and unread text and
+      //     with it the whole effect. So the effect stays for readers who
+      //     have not asked otherwise, and anyone who has gets full contrast
+      //     from the first frame. Note axe-core will still flag the dim
+      //     words in a default profile; that is this trade, made knowingly.
+      if (!ctx.conditions?.motion || ctx.conditions?.highContrast) {
         gsap.set(words, { opacity: 1 });
         gsap.set(progress.current, { scaleX: 1 });
         return;

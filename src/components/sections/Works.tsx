@@ -76,9 +76,12 @@ export default function Works() {
     >
       {/* ── Act marker ───────────────────────────────────────────────── */}
       <div className="flex items-baseline justify-between rule-b gutter pt-24 pb-3 md:pt-28">
-        <span className="eyebrow">
+        {/* A real <h2>: the project titles below are <h3>, and without a
+            level-2 heading above them the document outline jumps h1 -> h3.
+            Styled as an eyebrow — a heading does not have to be loud. */}
+        <h2 className="eyebrow">
           ACT III <span className="text-chalk">— Selected Works</span>
-        </span>
+        </h2>
         <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
           003
         </span>
@@ -105,7 +108,7 @@ export default function Works() {
                 {/* Metadata header */}
                 <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 pb-8 md:pb-10">
                   <span className="numeric text-label text-ash tracking-eyebrow">
-                    {index} <span className="text-rule-strong">{"//"}</span>{" "}
+                    {index} <span className="text-ash">{"//"}</span>{" "}
                     {WORK_COUNT}
                   </span>
                   <span className="eyebrow text-slate">{work.category}</span>
@@ -152,11 +155,18 @@ export default function Works() {
                           <WorkLink
                             href={work.live}
                             label="VIEW ARTIFACT"
+                            // Without the title these read as four identical
+                            // links in a screen reader's link list.
+                            title={work.title}
                             primary
                           />
                         )}
                         {work.source && (
-                          <WorkLink href={work.source} label="SOURCE" />
+                          <WorkLink
+                            href={work.source}
+                            label="SOURCE"
+                            title={work.title}
+                          />
                         )}
                       </div>
                     )}
@@ -174,7 +184,7 @@ export default function Works() {
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="numeric text-label-sm text-rule-strong tracking-eyebrow-wide uppercase">
+                          <span className="numeric text-label-sm text-ash tracking-eyebrow-wide uppercase">
                             {work.id} / no capture
                           </span>
                         </div>
@@ -209,10 +219,12 @@ function Tick({ className }: { className: string }) {
 function WorkLink({
   href,
   label,
+  title,
   primary = false,
 }: {
   href: string;
   label: string;
+  title: string;
   primary?: boolean;
 }) {
   return (
@@ -220,6 +232,7 @@ function WorkLink({
       href={href}
       target="_blank"
       rel="noreferrer noopener"
+      aria-label={`${label}: ${title} (opens in a new tab)`}
       data-lenis-ignore
       className={`group inline-flex items-center gap-1.5 eyebrow transition-colors duration-[--duration-swift] ease-swift ${
         primary ? "text-chalk hover:text-signal" : "text-ash hover:text-chalk"

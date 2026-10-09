@@ -78,15 +78,10 @@ export const outro = {
 
   lede: "Open to internships, freelance work and collaborations. The fastest way to reach me is email.",
 
-  // ──────────────────────────────────────────────────────────────────────
-  // ACTION REQUIRED — set a real address.
-  //
-  // Your account email is known to this session, but publishing a personal
-  // address on a public page is a different act from identifying you in a
-  // commit, and scrapers read portfolios. Put whichever address you actually
-  // want public here — many people keep a separate one for this.
-  // ──────────────────────────────────────────────────────────────────────
-  email: "you@example.com",
+  // Set NEXT_PUBLIC_CONTACT_EMAIL in Vercel to route mail somewhere else
+  // (a forwarding alias on a custom domain, say) without a redeploy of this
+  // file. The literal is the address you asked to publish.
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL || "tanishj52@gmail.com",
 
   place: "DESIGNED & ARCHITECTED IN MUMBAI, IN",
 } as const;
@@ -104,8 +99,16 @@ export const socials: SocialLink[] = [
     n: "02",
     label: "LINKEDIN",
     handle: "tanish-jain",
-    href: "https://www.linkedin.com/in/tanish-jain-7b37032bb/",
+    href: "https://www.linkedin.com/in/tanish-jain-7b37032bb",
   },
-  // X / Twitter: add it here with n "03" once you tell me the handle. The
-  // matrix renders whatever is in this array, so nothing else needs editing.
+  {
+    // ⚠ Confirm this handle. It came through as a suggested placeholder, and
+    // it is also published in the Person JSON-LD sameAs array — a dead
+    // profile there weakens the entity link rather than strengthening it.
+    // Delete this entry if the account does not exist.
+    n: "03",
+    label: "X",
+    handle: "tanishj52",
+    href: "https://x.com/tanishj52",
+  },
 ];
