@@ -89,12 +89,16 @@
   --text-manifesto--line-height: 1.08;
   --text-manifesto--letter-spacing: -0.025em;
 
-  /* The name as masthead. Separate from --text-hero because the two carry
-   * different amounts of text: "TANISH" is six characters and left 59% of the
-   * measure empty at --text-hero's scale, while the 404's "PAGE NOT" is eight
-   * and would overflow at this one. Sized to fill roughly 80% of the column,
-   * and height-bound so two lines still clear a short laptop viewport. */
-  --text-name: clamp(3rem, min(19vw, 29vh), 17rem);
+  /* The hero statement. Separate from --text-hero because the two carry
+   * different amounts of text and sit in different tracks: the 404's
+   * "PAGE NOT" runs full width, while this is "FULL STACK" inside an
+   * eight-of-twelve column from `lg` up.
+   *
+   * Measured: "FULL STACK" renders 5.96px wide per 1px of font-size. The
+   * value below is overridden at `lg` for the narrower track; without that
+   * split one clamp either overruns the column on desktop or leaves the line
+   * undersized on a phone. Sized to about 85% of its track. */
+  --text-name: clamp(2.75rem, 12vw, 9rem);
   --text-name--line-height: 0.82;
   --text-name--letter-spacing: -0.055em;
 
@@ -196,6 +200,15 @@
   /* --- Grain ------------------------------------------------------------- */
   --grain-opacity: 0.045;
   --grain-tile: 160px;
+}
+
+/* From `lg` the headline shares its row with the spec card and only has an
+ * eight-column track, so it has to come down. Height-bound as well, because
+ * the whole of Act I has to stay above the fold on a short laptop window. */
+@media (width >= 64rem) {
+  :root {
+    --text-name: clamp(2.75rem, min(7.5vw, 22vh), 13rem);
+  }
 }
 
 /* ───────────────────────────────────────────────────────────────────────────

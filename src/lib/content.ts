@@ -21,9 +21,22 @@ export const hero = {
   // object: the designer picks where it breaks, and fixed breaks mean no
   // re-split and no reflow on resize. The longest line governs the fluid size,
   // so if you edit these, re-check for horizontal overflow at 360px.
-  headline: ["TANISH", "JAIN"],
+  // The accent full stop is appended by Hero.tsx, not written here, so the
+  // last line must NOT carry its own period or it renders "SYSTEMS..".
+  headline: ["FULL STACK", "SYSTEMS"],
 
-  lede: "Full-stack developer in Mumbai, currently doing a B.Tech. I build web apps, and I like understanding what runs underneath them.",
+  lede: "Full-stack engineer based in Mumbai. Architecting high-throughput web platforms, distributed backends, and frame-locked digital craft.",
+} as const;
+
+/** Technical spec card, right column of Act I. */
+export const spec = {
+  label: "SPEC // 01",
+  rows: [
+    ["DISCIPLINE", "FULL-STACK & GRAPHICS"],
+    ["STACK", "NEXT.JS / TYPESCRIPT / POSTGRES"],
+    ["RUNTIMES", "EDGE & NODE"],
+    ["LOCATION", "MUMBAI, IN"],
+  ] as const satisfies readonly (readonly [string, string])[],
 } as const;
 
 export const manifesto = {

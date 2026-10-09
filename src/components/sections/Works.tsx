@@ -22,6 +22,7 @@ import { ArrowUpRight } from "lucide-react";
 import { useGSAPContext } from "@/hooks/useGSAPContext";
 import { gsap } from "@/lib/gsap";
 import { works, WORK_COUNT } from "@/lib/works";
+import CornerTicks from "@/components/ui/CornerTicks";
 
 export default function Works() {
   const root = useRef<HTMLElement>(null);
@@ -190,11 +191,8 @@ export default function Works() {
                         </div>
                       )}
 
-                      {/* Corner ticks — drafting marks, not decoration. */}
-                      <Tick className="-top-px -left-px border-t border-l" />
-                      <Tick className="-top-px -right-px border-t border-r" />
-                      <Tick className="-bottom-px -left-px border-b border-l" />
-                      <Tick className="-right-px -bottom-px border-r border-b" />
+                      {/* Drafting marks, not decoration. */}
+                      <CornerTicks />
                     </div>
                   </div>
                 </div>
@@ -204,15 +202,6 @@ export default function Works() {
         })}
       </div>
     </section>
-  );
-}
-
-function Tick({ className }: { className: string }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`pointer-events-none absolute size-2.5 border-signal ${className}`}
-    />
   );
 }
 
