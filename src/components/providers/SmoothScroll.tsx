@@ -189,9 +189,14 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       if (typeof target === "number") {
         window.scrollTo({ top: target + (options.offset ?? 0) });
       } else if (node instanceof HTMLElement) {
+        // window.scrollTo ignores scroll-margin-top (unlike scrollIntoView and
+        // unlike Lenis), so honour it here or anchors land under the masthead.
+        const margin =
+          parseFloat(getComputedStyle(node).scrollMarginTop || "0") || 0;
         const top =
           node.getBoundingClientRect().top +
-          window.scrollY +
+          window.scrollY -
+          margin +
           (options.offset ?? 0);
         window.scrollTo({ top });
       }
@@ -237,6 +242,10 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       if (!(node instanceof HTMLElement)) return;
 
       event.preventDefault();
+      // No offset here on purpose. Lenis already subtracts the target's
+      // scroll-margin-top when scrolling to a node, so passing it again
+      // lands the section a full masthead too low. `scrollTo`'s native
+      // fallback applies it instead, since window.scrollTo does not.
       scrollTo(node, {
         onComplete: () => {
           // Keep the URL and the a11y focus target honest.

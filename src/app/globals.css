@@ -35,13 +35,19 @@
    * Contrast measured against --color-void (#080808), sRGB WCAG 2.1:
    *   chalk  18.37:1  AA/AAA any size
    *   slate   7.94:1  AA/AAA any size
-   *   ash     4.22:1  FAILS AA at body size. Legal only for >=24px, or
-   *                   >=18.66px bold, or non-text UI. Use for mono eyebrows,
-   *                   indices and metadata — never for paragraphs.
+   *   ash     4.93:1 on void, 4.75:1 on ink — AA at any size on both
+   *
+   * ash was #737373 (4.22:1) until an axe-core pass caught it failing AA on
+   * 128 nodes: the token was documented as large-text-only, then used for
+   * every 10–11px mono eyebrow, index and metadata label on the site. Raising
+   * it clears 4.5:1 at those sizes and is a shift nobody can see. #7a7a7a
+   * was the first attempt and still failed on --color-ink (4.49:1), which is
+   * the stricter surface — the status widget and the work previews sit on it.
+   * Keep ash at or above #7c7c7c so both surfaces pass.
    */
   --color-chalk: #f5f5f5; /* primary */
   --color-slate: #a3a3a3; /* muted, safe at body size */
-  --color-ash: #737373; /* muted, large/label only */
+  --color-ash: #7e7e7e; /* muted labels, AA on void and ink */
   --color-void-text: #0a0a0a; /* primary text when on bone (15.9:1) */
   --color-void-muted: #525252; /* muted text when on bone (7.09:1) */
 
@@ -68,6 +74,21 @@
    * `--text-x--line-height` / `--text-x--letter-spacing` siblings are applied
    * automatically by the `text-x` utility.
    */
+  /* Hero headline. Bound by viewport HEIGHT as well as width, so a 4-line
+   * masthead still fits a short laptop viewport (1440x700) without pushing
+   * the metadata bar below the fold. vh, not dvh, on purpose: dvh changes as
+   * a mobile URL bar collapses, which would continuously resize the type. */
+  --text-hero: clamp(2.5rem, min(11vw, 15.5vh), 9rem);
+  --text-hero--line-height: 0.82;
+  --text-hero--letter-spacing: -0.05em;
+
+  /* Pinned manifesto statement. Height-bound like --text-hero: the whole
+   * statement has to fit inside one pinned viewport, so the type scales to
+   * the shorter axis rather than overflowing the pin. */
+  --text-manifesto: clamp(1.5rem, min(4vw, 5.8vh), 3.5rem);
+  --text-manifesto--line-height: 1.08;
+  --text-manifesto--letter-spacing: -0.025em;
+
   --text-mega: clamp(3.25rem, 13.5vw, 13rem);
   --text-mega--line-height: 0.82;
   --text-mega--letter-spacing: -0.05em;
@@ -143,6 +164,11 @@
   --gutter-md: 4rem; /*  64px — >=768px  */
   --gutter-lg: 6rem; /*  96px — >=1024px */
   --measure: 68ch; /* max line length for prose */
+
+  /* --- Masthead ----------------------------------------------------------
+   * Height of the fixed editorial masthead. Sections offset their anchors by
+   * this via scroll-margin-top, and the Act III deck stacks beneath it. */
+  --nav-h: 3.5rem;
 
   /* --- Grain ------------------------------------------------------------- */
   --grain-opacity: 0.045;
@@ -417,28 +443,4 @@ html.lenis body {
   overflow: hidden;
   padding-block: 0.08em; /* room for descenders so they aren't shaved */
   margin-block: -0.08em;
-}
-
-/* ───────────────────────────────────────────────────────────────────────────
- * TEMPORARY v1 BRIDGE — DELETE WITH THE LAST v1 SECTION
- *
- * src/components/sections/*.module.css and ui/*.module.css still read the v1
- * variable names. These aliases keep the existing page rendering (and the
- * build green) while sections are rewritten one at a time. They are aliases
- * only — no new values enter the system through them.
- *
- * Remove this block, and the file will fail loudly on any v1 leftover.
- * Tracked by: npm run lint:design
- * ─────────────────────────────────────────────────────────────────────────── */
-:root {
-  --bg-oled: var(--color-void);
-  --bg-surface: var(--color-ink);
-  --text-primary: var(--color-chalk);
-  --text-secondary: var(--color-slate);
-  --text-muted: var(--color-ash);
-  --border-subtle: var(--color-rule);
-  --accent-blue: var(--color-signal);
-  --accent-glow: var(--color-signal);
-  --radius-card: 2px;
-  --radius-btn: 0px;
 }

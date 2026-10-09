@@ -59,3 +59,5 @@ Icon
 ._*
 .Trashes
 .Spotlight-V100
+# Scratch screenshots written by the local browser test harness
+/.*.png
