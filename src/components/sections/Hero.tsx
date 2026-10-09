@@ -1,139 +1,154 @@
 "use client";
-// src/components/sections/Hero.tsx
-import { useRef, Suspense, useState, useEffect } from "react";
-import { Canvas } from "@react-three/fiber";
-import { EffectComposer, Bloom } from "@react-three/postprocessing";
-import * as THREE from "three";
-import { motion } from "framer-motion";
-import HeroScene from "@/components/canvas/HeroScene";
-import ParticleField from "@/components/canvas/ParticleField";
-import { useMouseParallax } from "@/hooks/useMouseParallax";
-import { useSmoothScroll } from "@/components/providers/SmoothScroll";
-import styles from "./Hero.module.css";
+// src/components/sections/Hero.tsx — Act I: The Entry
+//
+// Full-dvh brutalist masthead: authored headline lines revealed behind
+// overflow masks, over a mono metadata bar.
+//
+// Why hand-authored line masks instead of SplitText:
+//   The headline is fluid (clamp on vw), so with SplitText the line breaks
+//   move as the viewport changes and every resize needs a re-split — which
+//   re-measures, re-wraps and can shift layout mid-animation. Fixed breaks
+//   from content.ts are deterministic, survive resize untouched, and are
+//   what a typeset brutalist headline wants anyway. The `line-clip` utility
+//   supplies the mask; GSAP only moves the inner span.
+//
+// No-JS: the inner spans ship translated out of view so GSAP can bring them
+// in without a flash of final position. The <noscript> block below resets
+// them, so the headline is still readable with JavaScript disabled.
+
+import { useRef } from "react";
+import { useGSAPContext } from "@/hooks/useGSAPContext";
+import { gsap } from "@/lib/gsap";
+import { hero, BUILD_VERSION } from "@/lib/content";
+import LocalTime from "@/components/ui/LocalTime";
+
+// Vercel exposes this automatically when "Automatically expose System
+// Environment Variables" is on (the default). Falls back when absent.
+const COMMIT =
+  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.slice(0, 7).toUpperCase() ??
+  "LOCAL";
 
 export default function Hero() {
-  const { scrollTo } = useSmoothScroll();
-  const mouseRef = useMouseParallax();
-  const heroRef = useRef<HTMLDivElement>(null);
-  
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [inView, setInView] = useState(true);
+  const root = useRef<HTMLElement>(null);
 
-  // 1. Loading Manager
-  useEffect(() => {
-    THREE.DefaultLoadingManager.onLoad = () => {
-      setIsLoaded(true);
-    };
-    // Fallback safeguard if scene finishes compiling instantaneously without triggering manager
-    const timeout = setTimeout(() => setIsLoaded(true), 800);
-    return () => clearTimeout(timeout);
-  }, []);
+  useGSAPContext(
+    (ctx) => {
+      const reduced = !ctx.conditions?.motion;
+      const lines = gsap.utils.toArray<HTMLElement>("[data-hero-line]");
+      const fades = gsap.utils.toArray<HTMLElement>("[data-hero-fade]");
 
-  // 2. Frustum Culling / In-View Check
-  useEffect(() => {
-    if (!heroRef.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => setInView(entry.isIntersecting),
-      { threshold: 0 }
-    );
-    observer.observe(heroRef.current);
-    return () => observer.disconnect();
-  }, []);
+      // Every tween below pins `y: 0` alongside `yPercent`, and that is load
+      // bearing. getComputedStyle reports `transform` as a MATRIX, so GSAP
+      // reads the markup's `translateY(115%)` back as `y: 183px,
+      // yPercent: 0` — it cannot tell a percentage from pixels once the
+      // browser has resolved it. A plain `to({ yPercent: 0 })` is then a
+      // no-op against a start state GSAP believes is already 0, and the
+      // headline never leaves its mask. Writing both components explicitly
+      // makes GSAP own the whole transform and zero the stale pixel offset.
+      if (reduced) {
+        // Static, full-contrast end state. No motion, no scroll dependency.
+        gsap.set(lines, { yPercent: 0, y: 0 });
+        gsap.set(fades, { opacity: 1, y: 0 });
+        return;
+      }
 
-  // 3. Handlers for buttons
-  // `scrollTo` already falls back to native scrolling when Lenis is absent
-  // (reduced-motion, pre-mount), so no branch is needed here.
-  const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
-    e.preventDefault();
-    scrollTo(target, { duration: 1.2 });
-  };
+      const tl = gsap.timeline({
+        defaults: { ease: "expo.out" }, // matches --ease-editorial
+      });
+
+      tl.fromTo(
+        lines,
+        { yPercent: 115, y: 0 },
+        { yPercent: 0, y: 0, duration: 1.1, stagger: 0.075 },
+      ).fromTo(
+        fades,
+        { opacity: 0, y: 8 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.06 },
+        "-=0.65",
+      );
+    },
+    { scope: root, media: true },
+  );
 
   return (
-    <section ref={heroRef} className={styles.hero} id="hero" style={{ backgroundColor: "#000000" }}>
-      {/* 3D Canvas */}
-      <div 
-        className={styles.canvas}
-        style={{ 
-          opacity: isLoaded ? 1 : 0, 
-          transition: "opacity 1.5s ease-in-out", 
-          pointerEvents: "none", 
-          zIndex: 0 
-        }}
+    <header
+      ref={root}
+      id="hero"
+      className="relative flex min-h-dvh flex-col justify-between gutter pt-24 pb-8 md:pt-28"
+    >
+      <noscript>
+        {/* Without JS the entrance never runs, so neutralise the start state. */}
+        <style>{`[data-hero-line]{transform:none!important}[data-hero-fade]{opacity:1!important;transform:none!important}`}</style>
+      </noscript>
+
+      {/* ── Masthead rule ────────────────────────────────────────────── */}
+      <div
+        data-hero-fade
+        className="flex items-baseline justify-between rule-b pb-3 opacity-0"
+        style={{ transform: "translateY(8px)" }}
       >
-        <Canvas
-          frameloop={inView ? "always" : "demand"}
-          camera={{ position: [0, 0, 5], fov: 60 }}
-          gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-          dpr={[1, 1.5]}
-        >
-          <Suspense fallback={null}>
-            <ParticleField />
-            <HeroScene mouseRef={mouseRef} />
-            
-            {/* Optimized Post-Processing */}
-            <EffectComposer multisampling={0}>
-              <Bloom
-                intensity={1.5}
-                luminanceThreshold={0.1}
-                luminanceSmoothing={0.9}
-                resolutionScale={0.5}
-              />
-            </EffectComposer>
-          </Suspense>
-        </Canvas>
+        <span className="eyebrow">
+          {hero.act} <span className="text-chalk">— {hero.actTitle}</span>
+        </span>
+        <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
+          {hero.index}
+        </span>
       </div>
 
-      {/* Text overlay */}
-      <div className={styles.content}>
-        <motion.div 
-          className={styles.badge}
-          animate={{ opacity: [0.85, 1, 0.85], scale: [0.99, 1.02, 0.99] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <span className={styles.dot} />
-          Available for internships & freelance
-        </motion.div>
-{/*    into scalable code. */}
-        <h1 className={styles.headline}>
-          <span className={styles.line1}>Turning</span>
-          <span className={styles.line2}>
-            ambitious <span className={styles.accent}>ideas</span>
+      {/* ── Headline ─────────────────────────────────────────────────── */}
+      <h1
+        className="font-display text-hero tracking-brutal my-6 font-semibold uppercase md:my-8"
+        // The visible text is the sum of the lines; give AT a clean version.
+        aria-label={hero.headline.join(" ")}
+      >
+        {hero.headline.map((line) => (
+          <span key={line} className="line-clip" aria-hidden="true">
+            <span
+              data-hero-line
+              className="block"
+              style={{ transform: "translateY(115%)" }}
+            >
+              {line}
+            </span>
           </span>
-          <span className={styles.line3}>into scalable</span>
-          <span className={styles.line4}>code</span>
-        </h1>
+        ))}
+      </h1>
 
-        <p className={styles.subtext}>
-          B.Tech student and full-stack developer based in Mumbai.
-Currently building Cozytte, a circular fashion platform, and focused on creating high-performance web apps.
+      {/* ── Lede + metadata ──────────────────────────────────────────── */}
+      <div className="flex flex-col gap-8">
+        <p
+          data-hero-fade
+          className="measure text-lead text-slate opacity-0"
+          style={{ transform: "translateY(8px)" }}
+        >
+          {hero.lede}
         </p>
 
-        <div className={styles.ctas}>
-          <a 
-            href="#projects" 
-            className={styles.primaryCta}
-            onClick={(e) => handleScrollTo(e, "#projects")}
-          >
-            View Work
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </a>
-          <a 
-            href="#contact" 
-            className={styles.secondaryCta}
-            onClick={(e) => handleScrollTo(e, "#contact")}
-          >
-            Get in Touch
-          </a>
+        <div
+          data-hero-fade
+          className="flex flex-col gap-3 rule-t pt-3 opacity-0 md:flex-row md:items-center md:justify-between md:gap-6"
+          style={{ transform: "translateY(8px)" }}
+        >
+          <LocalTime
+            timeZone={hero.zone}
+            label={`${hero.place} [${hero.zoneLabel}]`}
+          />
+
+          <span className="flex items-center gap-2.5">
+            {/* Square, not a dot — the pill vocabulary is what we removed.
+                The global prefers-reduced-motion rule stops the pulse. */}
+            <span className="relative flex size-1.5 shrink-0">
+              <span className="absolute inset-0 animate-ping bg-signal opacity-75" />
+              <span className="relative size-1.5 bg-signal" />
+            </span>
+            <span className="eyebrow text-chalk">{hero.status}</span>
+          </span>
+
+          <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
+            {BUILD_VERSION} / {COMMIT}
+          </span>
         </div>
       </div>
-
-      {/* Scroll indicator */}
-      <div className={styles.scrollIndicator}>
-        <div className={styles.scrollLine} />
-        <span className={styles.scrollText}>Scroll to explore</span>
-      </div>
-    </section>
+    </header>
   );
 }

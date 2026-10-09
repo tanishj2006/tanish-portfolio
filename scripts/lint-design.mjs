@@ -14,14 +14,9 @@ import { join, relative } from "node:path";
 // checklist. Delete each entry as the component is rebuilt; when the list is
 // empty, remove it along with the v1 bridge block at the end of globals.css.
 const LEGACY = [
-  "src/app/page.tsx",
   "src/lib/data.ts",
-  "src/components/canvas/HeroScene.tsx",
-  "src/components/canvas/ParticleField.tsx",
   "src/components/ui/NavBar.module.css",
   "src/components/ui/BentoCard.module.css",
-  "src/components/sections/Hero.module.css",
-  "src/components/sections/About.module.css",
   "src/components/sections/Projects.module.css",
   "src/components/sections/Skills.module.css",
   "src/components/sections/Contact.module.css",

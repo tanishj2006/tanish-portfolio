@@ -68,6 +68,21 @@
    * `--text-x--line-height` / `--text-x--letter-spacing` siblings are applied
    * automatically by the `text-x` utility.
    */
+  /* Hero headline. Bound by viewport HEIGHT as well as width, so a 4-line
+   * masthead still fits a short laptop viewport (1440x700) without pushing
+   * the metadata bar below the fold. vh, not dvh, on purpose: dvh changes as
+   * a mobile URL bar collapses, which would continuously resize the type. */
+  --text-hero: clamp(2.5rem, min(11vw, 15.5vh), 9rem);
+  --text-hero--line-height: 0.82;
+  --text-hero--letter-spacing: -0.05em;
+
+  /* Pinned manifesto statement. Height-bound like --text-hero: the whole
+   * statement has to fit inside one pinned viewport, so the type scales to
+   * the shorter axis rather than overflowing the pin. */
+  --text-manifesto: clamp(1.5rem, min(4vw, 5.8vh), 3.5rem);
+  --text-manifesto--line-height: 1.08;
+  --text-manifesto--letter-spacing: -0.025em;
+
   --text-mega: clamp(3.25rem, 13.5vw, 13rem);
   --text-mega--line-height: 0.82;
   --text-mega--letter-spacing: -0.05em;
