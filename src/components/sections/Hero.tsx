@@ -21,12 +21,7 @@ import { useGSAPContext } from "@/hooks/useGSAPContext";
 import { gsap } from "@/lib/gsap";
 import { hero, BUILD_VERSION } from "@/lib/content";
 import LocalTime from "@/components/ui/LocalTime";
-
-// Vercel exposes this automatically when "Automatically expose System
-// Environment Variables" is on (the default). Falls back when absent.
-const COMMIT =
-  process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.slice(0, 7).toUpperCase() ??
-  "LOCAL";
+import SpecCard from "@/components/ui/SpecCard";
 
 export default function Hero() {
   const root = useRef<HTMLElement>(null);
@@ -74,7 +69,12 @@ export default function Hero() {
     <header
       ref={root}
       id="hero"
-      className="relative flex min-h-dvh flex-col justify-between gutter pt-24 pb-8 md:pt-28"
+      // pt is tied to --nav-h rather than a fixed scale step: the masthead is
+      // fixed, so this is the only thing keeping the act marker out from under
+      // it, and a hard-coded value silently breaks if the bar height changes.
+      // It was pt-24/md:pt-28, which pushed the whole column down far enough
+      // that the metadata bar fell below the fold on a laptop viewport.
+      className="relative flex min-h-dvh flex-col justify-between gutter pt-[calc(var(--nav-h)+1rem)] pb-8"
     >
       <noscript>
         {/* Without JS the entrance never runs, so neutralise the start state. */}
@@ -88,31 +88,60 @@ export default function Hero() {
         style={{ transform: "translateY(8px)" }}
       >
         <span className="eyebrow">
-          {hero.act} <span className="text-chalk">— {hero.actTitle}</span>
+          {hero.act} <span className="text-chalk">/ {hero.actTitle}</span>
         </span>
-        <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
+        <span className="numeric text-label-sm text-signal tracking-eyebrow-wide">
           {hero.index}
         </span>
       </div>
 
       {/* ── Headline ─────────────────────────────────────────────────── */}
-      <h1
-        className="font-display text-hero tracking-brutal my-6 font-semibold uppercase md:my-8"
-        // The visible text is the sum of the lines; give AT a clean version.
-        aria-label={hero.headline.join(" ")}
-      >
-        {hero.headline.map((line) => (
-          <span key={line} className="line-clip" aria-hidden="true">
-            <span
-              data-hero-line
-              className="block"
-              style={{ transform: "translateY(115%)" }}
-            >
-              {line}
+      {/* Headline and spec card share a row, bottom-aligned. Putting the card
+          beside the headline rather than under it fills the right-hand void
+          without adding a single pixel of height, which matters because the
+          whole hero has to stay above the fold on a short laptop window. */}
+      <div className="my-4 grid items-end gap-8 md:my-6 lg:grid-cols-12 lg:gap-10">
+        <h1
+          className="font-display text-name tracking-brutal font-semibold uppercase lg:col-span-8"
+          // The visible text is the sum of the lines; give AT a clean version.
+          aria-label={hero.headline.join(" ")}
+        >
+          {hero.headline.map((line, i) => (
+            <span key={line} className="line-clip" aria-hidden="true">
+              <span
+                data-hero-line
+                // nowrap is not cosmetic. line-clip is overflow:hidden sized
+                // for one line, so if a line wraps the overflow is not
+                // reflowed, it is clipped away: "FULL STACK" silently
+                // rendered as "FULL" at 1024, 1280 and 1440. The breaks here
+                // are authored in content.ts and must stay authored.
+                className="block whitespace-nowrap"
+                style={{ transform: "translateY(115%)" }}
+              >
+                {line}
+                {/* One accent glyph, on the last line only. At display size it
+                  reads from across the room while costing almost nothing
+                  against the under-5%-of-viewport accent budget, and it
+                  echoes the share card. */}
+                {i === hero.headline.length - 1 && (
+                  <span className="text-signal">.</span>
+                )}
+              </span>
             </span>
-          </span>
-        ))}
-      </h1>
+          ))}
+        </h1>
+
+        <aside
+          aria-label="Technical specification"
+          // Desktop only. Below lg the grid collapses to one column, so the
+          // card would stack under the headline and push the metadata bar
+          // off the fold on a phone or a tablet in portrait. Everything it
+          // states also appears in the metadata bar or Act IV.
+          className="hidden lg:col-span-4 lg:block"
+        >
+          <SpecCard />
+        </aside>
+      </div>
 
       {/* ── Lede + metadata ──────────────────────────────────────────── */}
       <div className="flex flex-col gap-8">
@@ -145,7 +174,7 @@ export default function Hero() {
           </span>
 
           <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
-            {BUILD_VERSION} / {COMMIT}
+            {BUILD_VERSION}
           </span>
         </div>
       </div>

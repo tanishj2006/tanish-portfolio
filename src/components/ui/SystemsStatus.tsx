@@ -91,7 +91,10 @@ export default function SystemsStatus() {
   }, [rows]);
 
   return (
-    <div className="border border-rule bg-ink">
+    // surface-dark re-asserts the dark type tokens. Without it this panel
+    // inherits the inverted ones from the bone section around it and renders
+    // dark text on dark ink.
+    <div className="surface-dark border border-rule">
       <div className="flex items-center justify-between rule-b px-4 py-2.5">
         <span className="eyebrow text-slate">SYSTEMS STATUS</span>
         <button

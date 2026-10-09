@@ -18,7 +18,7 @@ export const metadata: Metadata = {
 
   title: {
     default: SITE.title,
-    template: "%s — Tanish Jain",
+    template: "%s | Tanish Jain",
   },
   description: SITE.description,
 

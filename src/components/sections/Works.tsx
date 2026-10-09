@@ -18,10 +18,13 @@
 // reduced motion, with no class swap after hydration and so no flash.
 
 import { useRef } from "react";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useGSAPContext } from "@/hooks/useGSAPContext";
 import { gsap } from "@/lib/gsap";
 import { works, WORK_COUNT } from "@/lib/works";
+import { ARCHIVE_COUNT } from "@/lib/archive";
+import CornerTicks from "@/components/ui/CornerTicks";
 
 export default function Works() {
   const root = useRef<HTMLElement>(null);
@@ -80,7 +83,7 @@ export default function Works() {
             level-2 heading above them the document outline jumps h1 -> h3.
             Styled as an eyebrow — a heading does not have to be loud. */}
         <h2 className="eyebrow">
-          ACT III <span className="text-chalk">— Selected Works</span>
+          ACT III <span className="text-chalk">/ Selected Works</span>
         </h2>
         <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
           003
@@ -185,16 +188,13 @@ export default function Works() {
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
                           <span className="numeric text-label-sm text-ash tracking-eyebrow-wide uppercase">
-                            {work.id} / no capture
+                            {work.id} / no screenshot yet
                           </span>
                         </div>
                       )}
 
-                      {/* Corner ticks — drafting marks, not decoration. */}
-                      <Tick className="-top-px -left-px border-t border-l" />
-                      <Tick className="-top-px -right-px border-t border-r" />
-                      <Tick className="-bottom-px -left-px border-b border-l" />
-                      <Tick className="-right-px -bottom-px border-r border-b" />
+                      {/* Drafting marks, not decoration. */}
+                      <CornerTicks />
                     </div>
                   </div>
                 </div>
@@ -203,16 +203,30 @@ export default function Works() {
           );
         })}
       </div>
-    </section>
-  );
-}
 
-function Tick({ className }: { className: string }) {
-  return (
-    <span
-      aria-hidden="true"
-      className={`pointer-events-none absolute size-2.5 border-signal ${className}`}
-    />
+      {/* ── Archive trigger ──────────────────────────────────────────── */}
+      {/* Outside the sticky deck on purpose: inside it, this would stick and
+          stack along with the cards instead of ending the act. */}
+      <div className="gutter pt-12 pb-20 md:pt-16 md:pb-24">
+        <Link
+          href="/work"
+          className="group flex flex-col gap-3 border border-neutral-800 px-6 py-7 transition-colors duration-[--duration-swift] ease-swift hover:invert-surface sm:flex-row sm:items-center sm:justify-between md:px-8 md:py-8"
+        >
+          <span className="inline-flex items-center gap-2.5 eyebrow text-chalk">
+            [ALL ARTIFACTS &amp; EXPERIMENTS {"//"} ARCHIVE
+            <ArrowUpRight
+              className="size-3.5 transition-transform duration-[--duration-swift] ease-editorial group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              strokeWidth={1.5}
+              aria-hidden="true"
+            />
+            ]
+          </span>
+          <span className="numeric text-label text-ash tracking-eyebrow">
+            {WORK_COUNT} FEATURED {"/"} {ARCHIVE_COUNT} TOTAL
+          </span>
+        </Link>
+      </div>
+    </section>
   );
 }
 

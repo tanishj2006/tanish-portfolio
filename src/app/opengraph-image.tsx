@@ -100,30 +100,24 @@ export default async function Image() {
           </div>
         </div>
 
-        {/* Statement.
-            Syne ExtraBold runs about 1.2em per capital — far wider than a
-            normal grotesque — so at 118px even "SOFTWARE THAT" overran 1200px
-            and Satori rewrapped the block into five lines, pushing the footer
-            rule out of frame. These are the hero's own four breaks at a size
-            measured to fit: longest line is 10 characters, 10 x 1.2 x 84px
-            = ~1008px inside a 1072px column. nowrap makes that a guarantee
-            rather than a hope. */}
+        {/* Name, set as the card's subject. Syne ExtraBold runs about 1.2em
+            per capital, so the longest line here ("TANISH", 6 characters)
+            needs roughly 6 x 1.2 x 132 = 950px inside a 1072px column.
+            nowrap makes that a guarantee rather than a hope. */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
             fontFamily: "Syne",
-            fontSize: 84,
+            fontSize: 132,
             lineHeight: 0.86,
-            letterSpacing: -3.5,
+            letterSpacing: -5.5,
             color: CHALK,
           }}
         >
-          <span style={{ whiteSpace: "nowrap" }}>SOFTWARE</span>
-          <span style={{ whiteSpace: "nowrap" }}>THAT KNOWS</span>
-          <span style={{ whiteSpace: "nowrap" }}>WHAT IT</span>
+          <span style={{ whiteSpace: "nowrap" }}>TANISH</span>
           <span style={{ whiteSpace: "nowrap", display: "flex" }}>
-            COSTS<span style={{ color: SIGNAL }}>.</span>
+            JAIN<span style={{ color: SIGNAL }}>.</span>
           </span>
         </div>
 
@@ -141,8 +135,8 @@ export default async function Image() {
             color: ASH,
           }}
         >
-          <div>FULL-STACK ENGINEER</div>
-          <div>SYSTEMS / INTERFACE / 3D</div>
+          <div>FULL-STACK DEVELOPER</div>
+          <div>SELECTED WORK / THE STACK / CONTACT</div>
           <div style={{ color: CHALK }}>V2.0.0</div>
         </div>
       </div>

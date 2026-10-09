@@ -14,7 +14,8 @@ import { ArrowUp, ArrowUpRight, Check, Copy } from "lucide-react";
 import { useGSAPContext } from "@/hooks/useGSAPContext";
 import { gsap } from "@/lib/gsap";
 import { useSmoothScroll } from "@/components/providers/SmoothScroll";
-import { outro, socials } from "@/lib/content";
+import { inquiry, outro, socials } from "@/lib/content";
+import InquiryForm from "@/components/ui/InquiryForm";
 
 export default function Outro() {
   const root = useRef<HTMLElement>(null);
@@ -76,14 +77,14 @@ export default function Outro() {
       {/* ── Act marker ───────────────────────────────────────────────── */}
       <div className="flex items-baseline justify-between rule-b gutter pt-24 pb-3 md:pt-28">
         <span className="eyebrow">
-          {outro.act} <span className="text-chalk">— {outro.actTitle}</span>
+          {outro.act} <span className="text-chalk">/ {outro.actTitle}</span>
         </span>
         <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
           {outro.index}
         </span>
       </div>
 
-      <div className="gutter py-16 md:py-24">
+      <div className="gutter pt-16 pb-16 md:pt-24 md:pb-24">
         {/* ── Monumental headline ──────────────────────────────────── */}
         <h2
           className="font-display text-mega tracking-brutal font-semibold uppercase"
@@ -102,9 +103,9 @@ export default function Outro() {
           ))}
         </h2>
 
-        <div className="grid gap-12 pt-14 md:pt-20 lg:grid-cols-12 lg:gap-12">
-          {/* ── Email ──────────────────────────────────────────────── */}
-          <div className="flex flex-col gap-6 lg:col-span-7">
+        <div className="grid gap-14 pt-14 md:pt-20 lg:grid-cols-12 lg:gap-12">
+          {/* ── Left: intent + direct channels ─────────────────────── */}
+          <div className="flex flex-col gap-6 lg:col-span-5">
             <p className="measure text-lead text-slate">{outro.lede}</p>
 
             <div className="flex flex-wrap items-stretch gap-3">
@@ -136,47 +137,64 @@ export default function Outro() {
                 className="inline-flex w-[13ch] items-center justify-center gap-2 border border-rule px-4 py-3.5 eyebrow text-ash transition-colors duration-[--duration-swift] ease-swift hover:border-rule-strong hover:text-chalk"
               >
                 {copied ? (
-                  <Check className="size-3" strokeWidth={2} aria-hidden="true" />
+                  <Check
+                    className="size-3"
+                    strokeWidth={2}
+                    aria-hidden="true"
+                  />
                 ) : (
-                  <Copy className="size-3" strokeWidth={1.5} aria-hidden="true" />
+                  <Copy
+                    className="size-3"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  />
                 )}
                 {copied ? "COPIED" : "COPY"}
               </button>
             </div>
+
+            {/* ── Social matrix ────────────────────────────────────── */}
+            <nav aria-label="Elsewhere" className="pt-2">
+              <ul className="rule-t">
+                {socials.map((s) => (
+                  <li key={s.href}>
+                    <a
+                      href={s.href}
+                      target="_blank"
+                      rel="noreferrer noopener"
+                      aria-label={`${s.label}, ${s.handle} (opens in a new tab)`}
+                      data-lenis-ignore
+                      className="group flex items-baseline gap-4 rule-b px-1 py-5 transition-colors duration-[--duration-swift] ease-swift hover:invert-surface"
+                    >
+                      <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
+                        {s.n}
+                      </span>
+                      <span className="font-display text-title tracking-editorial uppercase">
+                        {s.label}
+                      </span>
+                      <span className="numeric ml-auto text-label text-ash tracking-eyebrow">
+                        {s.handle}
+                      </span>
+                      <ArrowUpRight
+                        className="size-3.5 shrink-0 self-center transition-transform duration-[--duration-swift] ease-editorial group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                        strokeWidth={1.5}
+                        aria-hidden="true"
+                      />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
 
-          {/* ── Social matrix ──────────────────────────────────────── */}
-          <nav aria-label="Elsewhere" className="lg:col-span-5">
-            <ul className="rule-t">
-              {socials.map((s) => (
-                <li key={s.href}>
-                  <a
-                    href={s.href}
-                    target="_blank"
-                    rel="noreferrer noopener"
-                    aria-label={`${s.label} — ${s.handle} (opens in a new tab)`}
-                    data-lenis-ignore
-                    className="group flex items-baseline gap-4 rule-b px-1 py-5 transition-colors duration-[--duration-swift] ease-swift hover:invert-surface"
-                  >
-                    <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
-                      {s.n}
-                    </span>
-                    <span className="font-display text-title tracking-editorial uppercase">
-                      {s.label}
-                    </span>
-                    <span className="numeric ml-auto text-label text-ash tracking-eyebrow">
-                      {s.handle}
-                    </span>
-                    <ArrowUpRight
-                      className="size-3.5 shrink-0 self-center transition-transform duration-[--duration-swift] ease-editorial group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                      strokeWidth={1.5}
-                      aria-hidden="true"
-                    />
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          {/* ── Right: inquiry form ────────────────────────────────── */}
+          <div className="flex flex-col gap-6 lg:col-span-7">
+            <div className="flex items-baseline gap-3 rule-b pb-3">
+              <span className="eyebrow text-signal">{inquiry.eyebrow}</span>
+              <span className="eyebrow">{inquiry.heading}</span>
+            </div>
+            <InquiryForm />
+          </div>
         </div>
       </div>
 

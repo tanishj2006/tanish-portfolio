@@ -89,6 +89,19 @@
   --text-manifesto--line-height: 1.08;
   --text-manifesto--letter-spacing: -0.025em;
 
+  /* The hero statement. Separate from --text-hero because the two carry
+   * different amounts of text and sit in different tracks: the 404's
+   * "PAGE NOT" runs full width, while this is "FULL STACK" inside an
+   * eight-of-twelve column from `lg` up.
+   *
+   * Measured: "FULL STACK" renders 5.96px wide per 1px of font-size. The
+   * value below is overridden at `lg` for the narrower track; without that
+   * split one clamp either overruns the column on desktop or leaves the line
+   * undersized on a phone. Sized to about 85% of its track. */
+  --text-name: clamp(2.75rem, 12vw, 9rem);
+  --text-name--line-height: 0.82;
+  --text-name--letter-spacing: -0.055em;
+
   --text-mega: clamp(3.25rem, 13.5vw, 13rem);
   --text-mega--line-height: 0.82;
   --text-mega--letter-spacing: -0.05em;
@@ -158,6 +171,20 @@
   --duration-swift: 240ms;
   --duration-editorial: 640ms;
   --duration-reveal: 1100ms;
+  --duration-marquee: 42s;
+
+  /* Translating exactly -50% of a track holding two identical copies puts
+   * copy two where copy one began, so the loop has no seam. */
+  --animate-marquee: marquee var(--duration-marquee) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 
   /* --- Editorial gutters ------------------------------------------------- */
   --gutter-sm: 1.5rem; /* 24px — base      */
@@ -173,6 +200,15 @@
   /* --- Grain ------------------------------------------------------------- */
   --grain-opacity: 0.045;
   --grain-tile: 160px;
+}
+
+/* From `lg` the headline shares its row with the spec card and only has an
+ * eight-column track, so it has to come down. Height-bound as well, because
+ * the whole of Act I has to stay above the fold on a short laptop window. */
+@media (width >= 64rem) {
+  :root {
+    --text-name: clamp(2.75rem, min(7.5vw, 22vh), 13rem);
+  }
 }
 
 /* ───────────────────────────────────────────────────────────────────────────
@@ -435,12 +471,47 @@ html.lenis body {
   --color-ash: var(--color-void-muted);
   --color-rule: var(--color-rule-inverse);
   --color-rule-strong: #b8b8b2;
+  /* The accent has to move too. #ff3e00 is 5.67:1 on void but only 3.21:1 on
+   * bone — large-text/UI only, which would fail on the 10px mono labels that
+   * use it. --color-signal-dim is 5.84:1 on bone and clears AA at any size. */
+  --color-signal: var(--color-signal-dim);
+}
+
+/* A dark island inside an inverted section.
+ *
+ * invert-surface redeclares the type tokens on its own element, and custom
+ * properties inherit, so a dark panel nested inside one would render dark text
+ * on a dark background. There is no way to read a shadowed property's original
+ * value, so these literals mirror the @theme defaults — keep them in sync if
+ * the palette ever moves. ash stays #7e7e7e because that is the value measured
+ * to clear AA on ink (4.75:1), the stricter of the two dark surfaces. */
+@utility surface-dark {
+  background-color: var(--color-ink);
+  color: #f5f5f5;
+  --color-chalk: #f5f5f5;
+  --color-slate: #a3a3a3;
+  --color-ash: #7e7e7e;
+  --color-rule: #1c1c1c;
+  --color-rule-strong: #2e2e2e;
+  --color-signal: #ff3e00;
 }
 
 /* Clip a line of display type for a mask-reveal (GSAP y-translate inside). */
 @utility line-clip {
   display: block;
   overflow: hidden;
-  padding-block: 0.08em; /* room for descenders so they aren't shaved */
-  margin-block: -0.08em;
+  /* The display tokens set line-height below 0.9, far tighter than Syne's
+   * natural ascent: the inked glyph box overshoots its own line box by a
+   * measured 0.194em at the top, constant across every size. At the original
+   * 0.08em the mask's overflow:hidden shaved the cap tops off every masked
+   * headline on the site — hero, outro and 404 alike — which only became
+   * obvious once the outro set type at 13rem. 0.18em was the first attempt
+   * and still left ~2px at 1920; 0.24em clears the overshoot with headroom
+   * for descenders. Re-measure if the display face or its leading changes.
+   *
+   * The negative margin cancels the padding, so line spacing is unchanged and
+   * the taller masks simply overlap. That is harmless: each mask clips only
+   * its own child, and none of them paint a background. */
+  padding-block: 0.24em;
+  margin-block: -0.24em;
 }

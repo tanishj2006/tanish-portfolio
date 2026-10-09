@@ -8,6 +8,7 @@ import NavBar from "@/components/ui/NavBar";
 import Hero from "@/components/sections/Hero";
 import Manifesto from "@/components/sections/Manifesto";
 import Works from "@/components/sections/Works";
+import Currently from "@/components/sections/Currently";
 import Stack from "@/components/sections/Stack";
 import Outro from "@/components/sections/Outro";
 
@@ -19,6 +20,7 @@ export default function Home() {
         <Hero />      {/* Act I   — The Entry     */}
         <Manifesto /> {/* Act II  — The Shift     */}
         <Works />     {/* Act III — Selected Works */}
+        <Currently /> {/* interstitial: ticker + what is being built now */}
         <Stack />     {/* Act IV  — Technical DNA */}
         <Outro />     {/* Act V   — The Close     */}
       </main>
