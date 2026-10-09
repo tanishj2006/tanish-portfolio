@@ -478,6 +478,18 @@ html.lenis body {
 @utility line-clip {
   display: block;
   overflow: hidden;
-  padding-block: 0.08em; /* room for descenders so they aren't shaved */
-  margin-block: -0.08em;
+  /* The display tokens set line-height below 0.9, far tighter than Syne's
+   * natural ascent: the inked glyph box overshoots its own line box by a
+   * measured 0.194em at the top, constant across every size. At the original
+   * 0.08em the mask's overflow:hidden shaved the cap tops off every masked
+   * headline on the site — hero, outro and 404 alike — which only became
+   * obvious once the outro set type at 13rem. 0.18em was the first attempt
+   * and still left ~2px at 1920; 0.24em clears the overshoot with headroom
+   * for descenders. Re-measure if the display face or its leading changes.
+   *
+   * The negative margin cancels the padding, so line spacing is unchanged and
+   * the taller masks simply overlap. That is harmless: each mask clips only
+   * its own child, and none of them paint a background. */
+  padding-block: 0.24em;
+  margin-block: -0.24em;
 }

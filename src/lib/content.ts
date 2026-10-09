@@ -135,3 +135,16 @@ export const ticker: string[] = [
   "RENDER LOOP",
   "MUMBAI, IN",
 ];
+
+export const inquiry = {
+  eyebrow: "INQUIRY",
+  heading: "Start a conversation",
+  types: [
+    "FREELANCE",
+    "FULL-TIME",
+    "COLLABORATION",
+    "SOMETHING ELSE",
+  ] as const,
+  success: "TRANSMISSION RECEIVED // WILL REPLY SHORTLY",
+  mailtoNote: "Opening your mail client — no form endpoint is configured yet.",
+} as const;
