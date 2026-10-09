@@ -13,9 +13,14 @@ import SystemsStatus from "@/components/ui/SystemsStatus";
 
 export default function Stack() {
   return (
+    // The one inverted act. Five dark sections in a row read as one
+    // undifferentiated block; a ledger on bone reads as a printed spec sheet
+    // and gives the page a structural beat. invert-surface remaps the type
+    // tokens AND the accent, so everything below inherits correct contrast
+    // without a single colour class changing.
     <section
       id="stack"
-      className="relative bg-void scroll-mt-[var(--nav-h)]"
+      className="relative invert-surface scroll-mt-[var(--nav-h)]"
     >
       {/* ── Act marker ───────────────────────────────────────────────── */}
       <div className="flex items-baseline justify-between rule-b gutter pt-24 pb-3 md:pt-28">

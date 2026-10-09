@@ -12,6 +12,7 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { useSmoothScroll } from "@/components/providers/SmoothScroll";
+import { useActiveSection } from "@/hooks/useActiveSection";
 
 const IDENTIFIER = "TANISH JAIN // ENG";
 
@@ -21,11 +22,16 @@ const INDEX = [
   { n: "03", label: "CONTACT", href: "#contact" },
 ];
 
+// Hoisted to module scope so the array identity is stable; inline, it would be
+// a fresh array every render and re-run the observer effect each time.
+const SECTION_IDS = INDEX.map((i) => i.href.slice(1));
+
 export default function NavBar() {
   const [open, setOpen] = useState(false);
   const { stop, start } = useSmoothScroll();
   const panelId = useId();
   const toggleRef = useRef<HTMLButtonElement>(null);
+  const active = useActiveSection(SECTION_IDS);
 
   // Lock scrolling behind the overlay via Lenis rather than `overflow: hidden`
   // on <body>: toggling body overflow changes the scrollbar gutter and shifts
@@ -63,18 +69,35 @@ export default function NavBar() {
 
         {/* Desktop index */}
         <ul className="hidden items-center gap-8 md:flex">
-          {INDEX.map((item) => (
-            <li key={item.href}>
-              <a href={item.href} className="group eyebrow inline-flex gap-2">
-                <span className="numeric text-ash transition-colors duration-[--duration-swift] ease-swift group-hover:text-signal">
-                  {item.n}
-                </span>
-                <span className="text-slate transition-colors duration-[--duration-swift] ease-swift group-hover:text-chalk">
-                  {"//"} {item.label}
-                </span>
-              </a>
-            </li>
-          ))}
+          {INDEX.map((item) => {
+            const isActive = active === item.href.slice(1);
+            return (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  aria-current={isActive ? "true" : undefined}
+                  className="group eyebrow inline-flex gap-2"
+                >
+                  {/* Colour only — nothing here changes box size, so the
+                      active state cannot shift the bar. */}
+                  <span
+                    className={`numeric transition-colors duration-[--duration-swift] ease-swift group-hover:text-signal ${
+                      isActive ? "text-signal" : "text-ash"
+                    }`}
+                  >
+                    {item.n}
+                  </span>
+                  <span
+                    className={`transition-colors duration-[--duration-swift] ease-swift group-hover:text-chalk ${
+                      isActive ? "text-chalk" : "text-slate"
+                    }`}
+                  >
+                    {"//"} {item.label}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
         </ul>
 
         {/* Mobile toggle — a word, not a hamburger. Fixed width so the
@@ -104,22 +127,30 @@ export default function NavBar() {
         }`}
       >
         <ul className="flex flex-col">
-          {INDEX.map((item) => (
-            <li key={item.href}>
-              <a
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="flex items-baseline gap-4 rule-b gutter py-5"
-              >
-                <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
-                  {item.n}
-                </span>
-                <span className="font-display text-title tracking-editorial uppercase">
-                  {item.label}
-                </span>
-              </a>
-            </li>
-          ))}
+          {INDEX.map((item) => {
+            const isActive = active === item.href.slice(1);
+            return (
+              <li key={item.href}>
+                <a
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  aria-current={isActive ? "true" : undefined}
+                  className="flex items-baseline gap-4 rule-b gutter py-5"
+                >
+                  <span
+                    className={`numeric text-label-sm tracking-eyebrow-wide ${
+                      isActive ? "text-signal" : "text-ash"
+                    }`}
+                  >
+                    {item.n}
+                  </span>
+                  <span className="font-display text-title tracking-editorial uppercase">
+                    {item.label}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </header>

@@ -158,6 +158,20 @@
   --duration-swift: 240ms;
   --duration-editorial: 640ms;
   --duration-reveal: 1100ms;
+  --duration-marquee: 42s;
+
+  /* Translating exactly -50% of a track holding two identical copies puts
+   * copy two where copy one began, so the loop has no seam. */
+  --animate-marquee: marquee var(--duration-marquee) linear infinite;
+
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
 
   /* --- Editorial gutters ------------------------------------------------- */
   --gutter-sm: 1.5rem; /* 24px — base      */
@@ -435,6 +449,29 @@ html.lenis body {
   --color-ash: var(--color-void-muted);
   --color-rule: var(--color-rule-inverse);
   --color-rule-strong: #b8b8b2;
+  /* The accent has to move too. #ff3e00 is 5.67:1 on void but only 3.21:1 on
+   * bone — large-text/UI only, which would fail on the 10px mono labels that
+   * use it. --color-signal-dim is 5.84:1 on bone and clears AA at any size. */
+  --color-signal: var(--color-signal-dim);
+}
+
+/* A dark island inside an inverted section.
+ *
+ * invert-surface redeclares the type tokens on its own element, and custom
+ * properties inherit, so a dark panel nested inside one would render dark text
+ * on a dark background. There is no way to read a shadowed property's original
+ * value, so these literals mirror the @theme defaults — keep them in sync if
+ * the palette ever moves. ash stays #7e7e7e because that is the value measured
+ * to clear AA on ink (4.75:1), the stricter of the two dark surfaces. */
+@utility surface-dark {
+  background-color: var(--color-ink);
+  color: #f5f5f5;
+  --color-chalk: #f5f5f5;
+  --color-slate: #a3a3a3;
+  --color-ash: #7e7e7e;
+  --color-rule: #1c1c1c;
+  --color-rule-strong: #2e2e2e;
+  --color-signal: #ff3e00;
 }
 
 /* Clip a line of display type for a mask-reveal (GSAP y-translate inside). */
