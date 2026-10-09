@@ -126,11 +126,9 @@ export const socials: SocialLink[] = [
 export const currently = {
   eyebrow: "CURRENTLY",
 
-  // ⚠ Yours to edit. This is carried over from your own v1 hero copy, which
-  // is the only thing I know to be true about what you are building now. A
-  // "currently" block that is months stale is worse than no block at all —
-  // it is the first thing a reader checks for signs of life.
-  line: "Building Cozytte, a circular fashion platform, and rebuilding this site in the open.",
+  // The eyebrow above already reads CURRENTLY, so the line itself does not
+  // repeat the prefix or the band renders "CURRENTLY CURRENTLY: ...".
+  line: "Architecting client platforms, experimenting with AI workflows & low-latency runtimes, and building in the open.",
 
   // Shown as a mono stamp beside the line. Update it when the line changes.
   since: "Q4 2026",

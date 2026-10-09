@@ -1,28 +1,12 @@
 // src/lib/works.ts
 //
-// ──────────────────────────────────────────────────────────────────────────
-// ACTION REQUIRED — the four narratives below are DRAFTS.
+// The four featured works in Act III. Everything here is real: live URLs,
+// public repositories, and narratives written from the projects themselves
+// rather than from their names.
 //
-// Structure, voice and layout are final. The facts are not: I know these
-// four projects only by name, so each `narrative` is a scaffold written in
-// the right register, and every entry carries `draft: true`.
-//
-// Before this goes in front of anyone, replace per project:
-//   narrative  the real problem, the real architectural decision, the real
-//              outcome. Keep it to 2–3 sentences. If you have a number worth
-//              quoting (latency, bundle size, query time, users) put it in —
-//              but only a measured one. An invented metric is worse than
-//              none, because the first person who asks about it will find out.
-//   stack      the actual dependencies, not aspirational ones
-//   year       confirm
-//   live/source omit the key entirely if the link does not exist; the UI
-//              renders only the triggers that are present
-//   image      /public path to a screenshot; without it the card renders a
-//              framed placeholder, which is deliberate, not broken
-//
-// Clear `draft: true` as each one is verified. Nothing renders differently
-// because of the flag — it is a checklist you can grep.
-// ──────────────────────────────────────────────────────────────────────────
+// The deck renders only the action triggers that exist, so omitting `live` or
+// `source` hides that link rather than producing a dead button. Add an
+// `image` path under /public and the framed placeholder becomes a screenshot.
 
 export type Work = {
   id: string;
@@ -34,49 +18,76 @@ export type Work = {
   live?: string;
   source?: string;
   image?: string;
-  draft?: boolean;
 };
 
 export const works: Work[] = [
   {
-    id: "vertex",
-    title: "Vertex",
-    category: "3D WEBGL",
+    id: "jaylaxmi",
+    title: "Jay Laxmi Light House",
+    category: "FULL-STACK & DIGITAL CATALOGUE",
     year: "2026",
     narrative:
-      "A telemetry dashboard that draws to a single WebGL canvas instead of a DOM tree. Dense, continuously-updating readouts are the case where React's reconciler stops being free — every tick touches hundreds of nodes — so the render path moves to the GPU and React keeps only the shell and the controls.",
-    stack: ["Three.js", "React Three Fiber", "TypeScript", "GLSL"],
-    draft: true,
-  },
-  {
-    id: "jurisbridge",
-    title: "JurisBridge AI",
-    category: "AI / SYSTEMS",
-    year: "2026",
-    narrative:
-      "Legal text is long, repetitive, and expensive to pass through a model verbatim. JurisBridge sits between the document and the model: it segments source material, retrieves only the passages a question actually needs, and returns answers that cite the clause they came from rather than paraphrasing it away.",
-    stack: ["Next.js", "Python", "Vector Search", "LLM API"],
-    draft: true,
-  },
-  {
-    id: "cozytte",
-    title: "Cozytte",
-    category: "FULL-STACK ARCHITECTURE",
-    year: "2025",
-    narrative:
-      "A circular fashion platform, where the hard part is not the storefront but identity: every garment is a single physical object that changes hands repeatedly. The data model tracks the item rather than the listing, so ownership, condition and price history stay attached to the piece across its whole life.",
-    stack: ["Next.js", "React", "Node.js", "SQL"],
-    draft: true,
+      "Production lighting catalogue engine architected for high organic discovery and zero layout shift. Engineered with programmatic SEO, localized schema markup, and geo-targeted optimization, delivering near-perfect Lighthouse scores and sub-second edge routing.",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Tailwind CSS",
+      "Supabase",
+      "SEO / JSON-LD",
+      "Edge Caching",
+    ],
+    live: "https://jaylaxmilighthouse.in/",
   },
   {
     id: "ambika",
     title: "Ambika Cycle Stores",
-    category: "COMMERCE / CATALOG",
-    year: "2025",
+    category: "E-COMMERCE ARCHITECTURE",
+    year: "2026",
     narrative:
-      "A working catalogue for a bicycle retailer whose inventory lived in a spreadsheet and a phone. Built around how the shop actually operates — stock that changes daily, specifications that matter to buyers, and a browsing path that survives a slow connection on a mid-range Android.",
-    stack: ["Next.js", "TypeScript", "Tailwind CSS"],
-    draft: true,
+      "Full-scale commercial cycle retail storefront deployed on Zoho Commerce. Engineered end-to-end catalog taxonomy, hierarchical variant groupings, custom styling layers, and integrated cart/checkout flows for seamless multi-device browsing.",
+    stack: [
+      "Zoho Commerce",
+      "Liquid / Custom CSS",
+      "Inventory Workflows",
+      "Commerce APIs",
+    ],
+    live: "https://www.ambikacyclestores.com/",
+  },
+  {
+    id: "jurisbridge",
+    title: "JurisBridge AI",
+    category: "AI SYSTEMS & LEGAL INTELLIGENCE",
+    year: "2026",
+    narrative:
+      "AI-powered legal document extraction and intelligence pipeline. Implemented client-side PII scrubbing and automated entity redaction before dispatching structured payloads to generative analysis models.",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Google Gemini API",
+      "PII Sanitization",
+      "Tailwind CSS",
+    ],
+    source: "https://github.com/tanishj2006/JurisBridge-AI",
+  },
+  {
+    // Narrative written from the repository's own README and package.json,
+    // not from the project name. Note for the record: this is a three-person
+    // academic project (TYCM-2, SAKEC) rather than solo work, worth stating
+    // somewhere if a reader is likely to assume otherwise.
+    id: "urban-incident",
+    title: "Urban Incident Response",
+    category: "MULTIMODAL AI & CIVIC SYSTEMS",
+    year: "2026",
+    narrative:
+      "Turns fragmented citizen reports (photographs, written descriptions, voice notes and GPS) into structured, de-duplicated, prioritised incidents routed to the department that owns them. The human-in-the-loop rules are enforced in code rather than documented: closure refuses without post-action evidence, a priority override is stored beside the recommendation instead of replacing it, and a low-confidence category is withheld into a triage queue. Every intake emits a trace of what each pipeline stage did and how long it took.",
+    stack: [
+      "Next.js",
+      "TypeScript",
+      "Google Gemini API",
+      "Leaflet",
+      "Geo-temporal Dedup",
+    ],
+    source: "https://github.com/tanishj2006/Urban-Incident-Response",
   },
 ];
 

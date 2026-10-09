@@ -18,10 +18,12 @@
 // reduced motion, with no class swap after hydration and so no flash.
 
 import { useRef } from "react";
+import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useGSAPContext } from "@/hooks/useGSAPContext";
 import { gsap } from "@/lib/gsap";
 import { works, WORK_COUNT } from "@/lib/works";
+import { ARCHIVE_COUNT } from "@/lib/archive";
 import CornerTicks from "@/components/ui/CornerTicks";
 
 export default function Works() {
@@ -200,6 +202,29 @@ export default function Works() {
             </article>
           );
         })}
+      </div>
+
+      {/* ── Archive trigger ──────────────────────────────────────────── */}
+      {/* Outside the sticky deck on purpose: inside it, this would stick and
+          stack along with the cards instead of ending the act. */}
+      <div className="gutter pt-12 pb-20 md:pt-16 md:pb-24">
+        <Link
+          href="/work"
+          className="group flex flex-col gap-3 border border-neutral-800 px-6 py-7 transition-colors duration-[--duration-swift] ease-swift hover:invert-surface sm:flex-row sm:items-center sm:justify-between md:px-8 md:py-8"
+        >
+          <span className="inline-flex items-center gap-2.5 eyebrow text-chalk">
+            [ALL ARTIFACTS &amp; EXPERIMENTS {"//"} ARCHIVE
+            <ArrowUpRight
+              className="size-3.5 transition-transform duration-[--duration-swift] ease-editorial group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              strokeWidth={1.5}
+              aria-hidden="true"
+            />
+            ]
+          </span>
+          <span className="numeric text-label text-ash tracking-eyebrow">
+            {WORK_COUNT} FEATURED {"/"} {ARCHIVE_COUNT} TOTAL
+          </span>
+        </Link>
       </div>
     </section>
   );
