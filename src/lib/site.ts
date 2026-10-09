@@ -39,10 +39,10 @@ export const IS_PRODUCTION = process.env.NEXT_PUBLIC_VERCEL_ENV
 
 export const SITE = {
   name: "Tanish Jain",
-  title: "Tanish Jain — Full-Stack Engineer & Creative Technologist",
-  jobTitle: "Full-Stack Software Engineer",
+  title: "Tanish Jain, Full-Stack Developer in Mumbai",
+  jobTitle: "Full-Stack Developer",
   description:
-    "Full-stack engineer in Mumbai building high-performance web applications — systems architecture, interface craft, and the render loop between them.",
+    "Full-stack developer in Mumbai. Selected web projects, the tools behind them, and how to get in touch.",
   locale: "en_US",
   url: SITE_URL,
 } as const;

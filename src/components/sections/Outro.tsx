@@ -77,7 +77,7 @@ export default function Outro() {
       {/* ── Act marker ───────────────────────────────────────────────── */}
       <div className="flex items-baseline justify-between rule-b gutter pt-24 pb-3 md:pt-28">
         <span className="eyebrow">
-          {outro.act} <span className="text-chalk">— {outro.actTitle}</span>
+          {outro.act} <span className="text-chalk">/ {outro.actTitle}</span>
         </span>
         <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
           {outro.index}
@@ -162,7 +162,7 @@ export default function Outro() {
                       href={s.href}
                       target="_blank"
                       rel="noreferrer noopener"
-                      aria-label={`${s.label} — ${s.handle} (opens in a new tab)`}
+                      aria-label={`${s.label}, ${s.handle} (opens in a new tab)`}
                       data-lenis-ignore
                       className="group flex items-baseline gap-4 rule-b px-1 py-5 transition-colors duration-[--duration-swift] ease-swift hover:invert-surface"
                     >

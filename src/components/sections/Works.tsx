@@ -80,7 +80,7 @@ export default function Works() {
             level-2 heading above them the document outline jumps h1 -> h3.
             Styled as an eyebrow — a heading does not have to be loud. */}
         <h2 className="eyebrow">
-          ACT III <span className="text-chalk">— Selected Works</span>
+          ACT III <span className="text-chalk">/ Selected Works</span>
         </h2>
         <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
           003
@@ -185,7 +185,7 @@ export default function Works() {
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
                           <span className="numeric text-label-sm text-ash tracking-eyebrow-wide uppercase">
-                            {work.id} / no capture
+                            {work.id} / no screenshot yet
                           </span>
                         </div>
                       )}

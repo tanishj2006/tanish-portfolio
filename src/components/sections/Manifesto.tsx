@@ -103,7 +103,7 @@ export default function Manifesto() {
         <div className="flex items-baseline justify-between rule-b pb-3">
           <span className="eyebrow">
             {manifesto.act}{" "}
-            <span className="text-chalk">— {manifesto.actTitle}</span>
+            <span className="text-chalk">/ {manifesto.actTitle}</span>
           </span>
           <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
             {manifesto.index}

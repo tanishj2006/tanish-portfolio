@@ -25,7 +25,7 @@ export default function Stack() {
       {/* ── Act marker ───────────────────────────────────────────────── */}
       <div className="flex items-baseline justify-between rule-b gutter pt-24 pb-3 md:pt-28">
         <span className="eyebrow">
-          {stack.act} <span className="text-chalk">— {stack.actTitle}</span>
+          {stack.act} <span className="text-chalk">/ {stack.actTitle}</span>
         </span>
         <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
           {stack.index}

@@ -10,7 +10,7 @@ export const BUILD_VERSION = "V2.0.0";
 
 export const hero = {
   act: "ACT I",
-  actTitle: "The Entry",
+  actTitle: "Intro",
   index: "001",
   place: "MUMBAI, IN",
   zone: "Asia/Kolkata",
@@ -21,28 +21,26 @@ export const hero = {
   // object: the designer picks where it breaks, and fixed breaks mean no
   // re-split and no reflow on resize. The longest line governs the fluid size,
   // so if you edit these, re-check for horizontal overflow at 360px.
-  headline: ["SOFTWARE", "THAT KNOWS", "WHAT IT", "COSTS."],
+  headline: ["TANISH", "JAIN"],
 
-  lede: "Tanish Jain — full-stack developer in Mumbai. Systems, interfaces, and the render loop between them.",
+  lede: "Full-stack developer in Mumbai, currently doing a B.Tech. I build web apps, and I like understanding what runs underneath them.",
 } as const;
 
 export const manifesto = {
   act: "ACT II",
-  actTitle: "The Shift",
+  actTitle: "How I Work",
   index: "002",
 
   // Scrubbed word by word. ~70 words suits a 250vh pin: long enough for the
   // scrub to have somewhere to go, short enough to finish before the reader
   // gives up on the pin.
   statement: [
-    "Most of the web is written as if the machine were *free*.",
-    "It is *not*.",
-    "Every frame has a budget. Every query has a floor. Every abstraction bills someone.",
-    "I work the stack *downward* — from Java, C and SQL to the render loop — because an interface is only as honest as the systems beneath it.",
-    "Geometry, state, latency. Build the thing. Then know what it cost.",
+    "I started with Java and C, so I learned about memory and pointers before I learned about components, and that order stuck.",
+    "When I build for the web now I still want to know what's happening underneath, like why a query is slow or what the bundle actually ships.",
+    "Most of what I've built is small, and I'd rather finish one thing *properly* than leave five half done.",
   ],
 
-  footer: "ENGINEERING PRINCIPLE / 01",
+  footer: "HOW I WORK / 01",
 } as const;
 
 export type Token = { text: string; emphasis: boolean };
@@ -60,23 +58,22 @@ export function tokenize(line: string): Token[] {
 
 export const stack = {
   act: "ACT IV",
-  actTitle: "Technical DNA",
+  actTitle: "The Stack",
   index: "004",
-  eyebrow: "02 // TECHNICAL LEDGER",
-  statement:
-    "A stack is not a list of logos. These are the layers I work in and what each one is responsible for.",
+  eyebrow: "02 // THE STACK",
+  statement: "The tools I actually work with, and what each one does.",
 } as const;
 
 export const outro = {
   act: "ACT V",
-  actTitle: "The Close",
+  actTitle: "Contact",
   index: "005",
 
   // --text-mega finally earns its place. Authored breaks, same reasoning as
   // the hero: the designer picks where a monumental line breaks.
-  headline: ["LET'S", "BUILD."],
+  headline: ["LET'S", "TALK."],
 
-  lede: "Open to internships, freelance work and collaborations. The fastest way to reach me is email.",
+  lede: "I'm open to internships, freelance work and collaborations. Email is the fastest way to reach me.",
 
   // Set NEXT_PUBLIC_CONTACT_EMAIL in Vercel to route mail somewhere else
   // (a forwarding alias on a custom domain, say) without a redeploy of this
@@ -138,7 +135,7 @@ export const ticker: string[] = [
 
 export const inquiry = {
   eyebrow: "INQUIRY",
-  heading: "Start a conversation",
+  heading: "Send me a message",
   types: [
     "FREELANCE",
     "FULL-TIME",
@@ -146,5 +143,5 @@ export const inquiry = {
     "SOMETHING ELSE",
   ] as const,
   success: "TRANSMISSION RECEIVED // WILL REPLY SHORTLY",
-  mailtoNote: "Opening your mail client — no form endpoint is configured yet.",
+  mailtoNote: "Opening your mail client. No form endpoint is configured yet.",
 } as const;

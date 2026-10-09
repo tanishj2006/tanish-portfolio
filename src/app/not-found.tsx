@@ -41,7 +41,7 @@ export default function NotFound() {
       <main className="flex flex-1 flex-col justify-between gutter py-14 md:py-20">
         <div className="flex items-baseline justify-between rule-b pb-3">
           <span className="eyebrow">
-            ERR <span className="text-signal">— 404</span>
+            ERR <span className="text-signal">/ 404</span>
           </span>
           <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
             NOT FOUND
@@ -55,24 +55,21 @@ export default function NotFound() {
               aria-hidden and the heading carries a clean label. */}
           <h1
             className="font-display text-hero tracking-brutal font-semibold uppercase"
-            aria-label="This page was never built"
+            aria-label="Page not found"
           >
             <span className="line-clip" aria-hidden="true">
-              <span className="block">THIS PAGE</span>
+              <span className="block">PAGE NOT</span>
             </span>
             <span className="line-clip" aria-hidden="true">
               <span className="block">
-                WAS NEVER<span className="text-signal">.</span>
+                FOUND<span className="text-signal">.</span>
               </span>
-            </span>
-            <span className="line-clip" aria-hidden="true">
-              <span className="block">BUILT</span>
             </span>
           </h1>
 
           <p className="measure text-lead text-slate">
-            The address resolved, the page did not. Nothing here was deleted —
-            it never existed at this path.
+            There&apos;s nothing at this address. It may have moved, or it may
+            never have been here.
           </p>
 
           <div>

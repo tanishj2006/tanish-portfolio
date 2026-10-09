@@ -74,7 +74,12 @@ export default function Hero() {
     <header
       ref={root}
       id="hero"
-      className="relative flex min-h-dvh flex-col justify-between gutter pt-24 pb-8 md:pt-28"
+      // pt is tied to --nav-h rather than a fixed scale step: the masthead is
+      // fixed, so this is the only thing keeping the act marker out from under
+      // it, and a hard-coded value silently breaks if the bar height changes.
+      // It was pt-24/md:pt-28, which pushed the whole column down far enough
+      // that the metadata bar fell below the fold on a laptop viewport.
+      className="relative flex min-h-dvh flex-col justify-between gutter pt-[calc(var(--nav-h)+1rem)] pb-8"
     >
       <noscript>
         {/* Without JS the entrance never runs, so neutralise the start state. */}
@@ -88,20 +93,20 @@ export default function Hero() {
         style={{ transform: "translateY(8px)" }}
       >
         <span className="eyebrow">
-          {hero.act} <span className="text-chalk">— {hero.actTitle}</span>
+          {hero.act} <span className="text-chalk">/ {hero.actTitle}</span>
         </span>
-        <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
+        <span className="numeric text-label-sm text-signal tracking-eyebrow-wide">
           {hero.index}
         </span>
       </div>
 
       {/* ── Headline ─────────────────────────────────────────────────── */}
       <h1
-        className="font-display text-hero tracking-brutal my-6 font-semibold uppercase md:my-8"
+        className="font-display text-name tracking-brutal my-4 font-semibold uppercase md:my-6"
         // The visible text is the sum of the lines; give AT a clean version.
         aria-label={hero.headline.join(" ")}
       >
-        {hero.headline.map((line) => (
+        {hero.headline.map((line, i) => (
           <span key={line} className="line-clip" aria-hidden="true">
             <span
               data-hero-line
@@ -109,6 +114,13 @@ export default function Hero() {
               style={{ transform: "translateY(115%)" }}
             >
               {line}
+              {/* One accent glyph, on the last line only. At display size it
+                  reads from across the room while costing almost nothing
+                  against the under-5%-of-viewport accent budget, and it
+                  echoes the share card. */}
+              {i === hero.headline.length - 1 && (
+                <span className="text-signal">.</span>
+              )}
             </span>
           </span>
         ))}

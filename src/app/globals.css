@@ -89,6 +89,15 @@
   --text-manifesto--line-height: 1.08;
   --text-manifesto--letter-spacing: -0.025em;
 
+  /* The name as masthead. Separate from --text-hero because the two carry
+   * different amounts of text: "TANISH" is six characters and left 59% of the
+   * measure empty at --text-hero's scale, while the 404's "PAGE NOT" is eight
+   * and would overflow at this one. Sized to fill roughly 80% of the column,
+   * and height-bound so two lines still clear a short laptop viewport. */
+  --text-name: clamp(3rem, min(19vw, 29vh), 17rem);
+  --text-name--line-height: 0.82;
+  --text-name--letter-spacing: -0.055em;
+
   --text-mega: clamp(3.25rem, 13.5vw, 13rem);
   --text-mega--line-height: 0.82;
   --text-mega--letter-spacing: -0.05em;

@@ -76,7 +76,7 @@ export default function InquiryForm() {
 
     if (!ENDPOINT) {
       const subject = `[${fields.type}] ${fields.name}`;
-      const body = `${fields.message}\n\n— ${fields.name} <${fields.email}>`;
+      const body = `${fields.message}\n\nFrom ${fields.name} (${fields.email})`;
       window.location.href = `mailto:${outro.email}?subject=${encodeURIComponent(
         subject,
       )}&body=${encodeURIComponent(body)}`;
@@ -153,7 +153,7 @@ export default function InquiryForm() {
           className="w-full appearance-none rounded-none border-0 border-b border-rule bg-transparent py-2.5 font-sans text-lead text-chalk transition-colors duration-[--duration-swift] ease-swift outline-none focus:border-chalk"
         >
           <option value="" className="bg-void">
-            SELECT —
+            SELECT
           </option>
           {inquiry.types.map((t) => (
             <option key={t} value={t} className="bg-void">
@@ -203,7 +203,7 @@ export default function InquiryForm() {
           className="min-h-[1rem] flex-1 eyebrow text-ash"
         >
           {status === "mailto" && inquiry.mailtoNote}
-          {status === "error" && "COULD NOT SEND — EMAIL ME DIRECTLY INSTEAD."}
+          {status === "error" && "COULD NOT SEND. EMAIL ME DIRECTLY INSTEAD."}
         </p>
       </div>
     </form>
