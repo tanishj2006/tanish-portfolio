@@ -237,7 +237,14 @@ export default function SmoothScroll({ children }: { children: ReactNode }) {
       if (!(node instanceof HTMLElement)) return;
 
       event.preventDefault();
+      // Respect the target's own scroll-margin-top instead of hard-coding a
+      // masthead height here: Lenis offsets are positive-downward, so the
+      // margin is applied as a negative offset.
+      const margin =
+        parseFloat(getComputedStyle(node).scrollMarginTop || "0") || 0;
+
       scrollTo(node, {
+        offset: -margin,
         onComplete: () => {
           // Keep the URL and the a11y focus target honest.
           window.history.pushState(null, "", url.hash);

@@ -1,62 +1,127 @@
 "use client";
-// src/components/ui/NavBar.tsx
-import { useEffect, useRef, useState } from "react";
-import { gsap } from "@/lib/gsap";
-import { navLinks, socialLinks } from "@/lib/data";
-import styles from "./NavBar.module.css";
+// src/components/ui/NavBar.tsx — The Masthead Bar
+//
+// Flat #080808, one hairline rule, mono index links. No blur, no shadow, no
+// scroll-triggered restyle: the bar reads the same at every scroll position,
+// which is the point of a masthead.
+//
+// Anchor navigation is handled globally by <SmoothScroll>, which intercepts
+// same-page hash links and routes them through Lenis while honouring each
+// target's scroll-margin-top. So these are plain <a href="#…"> elements — no
+// onClick, and no scrollIntoView() racing the smooth scroller.
+
+import { useEffect, useId, useRef, useState } from "react";
+import { useSmoothScroll } from "@/components/providers/SmoothScroll";
+
+const IDENTIFIER = "TANISH JAIN // ENG";
+
+const INDEX = [
+  { n: "01", label: "WORK", href: "#work" },
+  { n: "02", label: "STACK", href: "#skills" },
+  { n: "03", label: "CONTACT", href: "#contact" },
+];
 
 export default function NavBar() {
-  const navRef = useRef<HTMLElement>(null);
-  const [scrolled, setScrolled] = useState(false);
+  const [open, setOpen] = useState(false);
+  const { stop, start } = useSmoothScroll();
+  const panelId = useId();
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
+  // Lock scrolling behind the overlay via Lenis rather than `overflow: hidden`
+  // on <body>: toggling body overflow changes the scrollbar gutter and shifts
+  // layout. Lenis just stops advancing.
   useEffect(() => {
-    if (!navRef.current) return;
-    gsap.fromTo(
-      navRef.current,
-      { y: -80, opacity: 0 },
-      { y: 0, opacity: 1, duration: 1, ease: "power3.out", delay: 0.5 }
-    );
+    if (!open) return;
 
-    const handleScroll = () => setScrolled(window.scrollY > 50);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
+    stop();
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        toggleRef.current?.focus();
+      }
+    };
+    document.addEventListener("keydown", onKey);
 
-  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const target = document.querySelector(href);
-    if (target) target.scrollIntoView({ behavior: "smooth" });
-  };
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      start();
+    };
+  }, [open, stop, start]);
 
   return (
-    <nav ref={navRef} className={`${styles.nav} ${scrolled ? styles.scrolled : ""}`}>
-      <div className={styles.logo}>
-        <span className={styles.logoText}>TJ.</span>
-        <span className={styles.logoSub}>Tanish</span>
-      </div>
-
-      <ul className={styles.links}>
-        {navLinks.map((link) => (
-          <li key={link.href}>
-            <a
-              href={link.href}
-              className={styles.link}
-              onClick={(e) => handleNavClick(e, link.href)}
-            >
-              {link.label}
-            </a>
-          </li>
-        ))}
-      </ul>
-
-      <a
-        href={socialLinks.github}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={styles.cta}
+    <header className="fixed inset-x-0 top-0 z-50 bg-void rule-b">
+      <nav
+        aria-label="Primary"
+        className="flex h-[var(--nav-h)] items-center justify-between gutter"
       >
-        GitHub ↗
-      </a>
-    </nav>
+        <a
+          href="#hero"
+          className="eyebrow text-chalk transition-colors duration-[--duration-swift] ease-swift hover:text-signal"
+        >
+          {IDENTIFIER}
+        </a>
+
+        {/* Desktop index */}
+        <ul className="hidden items-center gap-8 md:flex">
+          {INDEX.map((item) => (
+            <li key={item.href}>
+              <a href={item.href} className="group eyebrow inline-flex gap-2">
+                <span className="numeric text-ash transition-colors duration-[--duration-swift] ease-swift group-hover:text-signal">
+                  {item.n}
+                </span>
+                <span className="text-slate transition-colors duration-[--duration-swift] ease-swift group-hover:text-chalk">
+                  {"//"} {item.label}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+
+        {/* Mobile toggle — a word, not a hamburger. Fixed width so the
+            MENU/CLOSE swap cannot nudge the bar. */}
+        <button
+          ref={toggleRef}
+          type="button"
+          onClick={() => setOpen((v) => !v)}
+          aria-expanded={open}
+          aria-controls={panelId}
+          className="eyebrow w-[4.5ch] text-right text-chalk md:hidden"
+        >
+          {open ? "CLOSE" : "MENU"}
+        </button>
+      </nav>
+
+      {/* Mobile overlay.
+          Always mounted and toggled with visibility/opacity rather than
+          conditionally rendered: the markup is identical on server and client,
+          so there is no hydration mismatch, and because it is `fixed` it is
+          out of flow and cannot shift the page either way. */}
+      <div
+        id={panelId}
+        inert={!open || undefined}
+        className={`fixed inset-x-0 top-[var(--nav-h)] bottom-0 bg-void transition-opacity duration-[--duration-swift] ease-swift md:hidden ${
+          open ? "opacity-100" : "pointer-events-none invisible opacity-0"
+        }`}
+      >
+        <ul className="flex flex-col">
+          {INDEX.map((item) => (
+            <li key={item.href}>
+              <a
+                href={item.href}
+                onClick={() => setOpen(false)}
+                className="flex items-baseline gap-4 rule-b gutter py-5"
+              >
+                <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
+                  {item.n}
+                </span>
+                <span className="font-display text-title tracking-editorial uppercase">
+                  {item.label}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </header>
   );
 }

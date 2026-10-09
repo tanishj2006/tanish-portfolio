@@ -159,6 +159,11 @@
   --gutter-lg: 6rem; /*  96px — >=1024px */
   --measure: 68ch; /* max line length for prose */
 
+  /* --- Masthead ----------------------------------------------------------
+   * Height of the fixed editorial masthead. Sections offset their anchors by
+   * this via scroll-margin-top, and the Act III deck stacks beneath it. */
+  --nav-h: 3.5rem;
+
   /* --- Grain ------------------------------------------------------------- */
   --grain-opacity: 0.045;
   --grain-tile: 160px;

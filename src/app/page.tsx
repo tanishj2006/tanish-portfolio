@@ -7,7 +7,7 @@
 import NavBar from "@/components/ui/NavBar";
 import Hero from "@/components/sections/Hero";
 import Manifesto from "@/components/sections/Manifesto";
-import Projects from "@/components/sections/Projects";
+import Works from "@/components/sections/Works";
 import Skills from "@/components/sections/Skills";
 import Contact from "@/components/sections/Contact";
 
@@ -20,8 +20,9 @@ export default function Home() {
         <Hero />
         {/* Act II */}
         <Manifesto />
-        {/* Acts III+ still on v1 — rebuilt in later phases. */}
-        <Projects />
+        {/* Act III */}
+        <Works />
+        {/* Acts IV+ still on v1 — rebuilt in later phases. */}
         <Skills />
         <Contact />
       </main>
