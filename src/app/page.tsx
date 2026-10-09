@@ -1,30 +1,26 @@
 // src/app/page.tsx
 //
-// Server component: every section below declares its own "use client", so the
-// page shell itself ships no JavaScript and the Act I headline is present in
-// the server-rendered HTML.
+// Server component. Hero, Works and Outro declare their own "use client";
+// Stack is fully static apart from its status widget. The page shell itself
+// ships no JavaScript.
 
 import NavBar from "@/components/ui/NavBar";
 import Hero from "@/components/sections/Hero";
 import Manifesto from "@/components/sections/Manifesto";
 import Works from "@/components/sections/Works";
-import Skills from "@/components/sections/Skills";
-import Contact from "@/components/sections/Contact";
+import Stack from "@/components/sections/Stack";
+import Outro from "@/components/sections/Outro";
 
 export default function Home() {
   return (
     <>
       <NavBar />
       <main>
-        {/* Act I */}
-        <Hero />
-        {/* Act II */}
-        <Manifesto />
-        {/* Act III */}
-        <Works />
-        {/* Acts IV+ still on v1 — rebuilt in later phases. */}
-        <Skills />
-        <Contact />
+        <Hero />      {/* Act I   — The Entry     */}
+        <Manifesto /> {/* Act II  — The Shift     */}
+        <Works />     {/* Act III — Selected Works */}
+        <Stack />     {/* Act IV  — Technical DNA */}
+        <Outro />     {/* Act V   — The Close     */}
       </main>
     </>
   );

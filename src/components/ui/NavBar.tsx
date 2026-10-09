@@ -17,7 +17,7 @@ const IDENTIFIER = "TANISH JAIN // ENG";
 
 const INDEX = [
   { n: "01", label: "WORK", href: "#work" },
-  { n: "02", label: "STACK", href: "#skills" },
+  { n: "02", label: "STACK", href: "#stack" },
   { n: "03", label: "CONTACT", href: "#contact" },
 ];
 

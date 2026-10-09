@@ -438,27 +438,3 @@ html.lenis body {
   padding-block: 0.08em; /* room for descenders so they aren't shaved */
   margin-block: -0.08em;
 }
-
-/* ───────────────────────────────────────────────────────────────────────────
- * TEMPORARY v1 BRIDGE — DELETE WITH THE LAST v1 SECTION
- *
- * src/components/sections/*.module.css and ui/*.module.css still read the v1
- * variable names. These aliases keep the existing page rendering (and the
- * build green) while sections are rewritten one at a time. They are aliases
- * only — no new values enter the system through them.
- *
- * Remove this block, and the file will fail loudly on any v1 leftover.
- * Tracked by: npm run lint:design
- * ─────────────────────────────────────────────────────────────────────────── */
-:root {
-  --bg-oled: var(--color-void);
-  --bg-surface: var(--color-ink);
-  --text-primary: var(--color-chalk);
-  --text-secondary: var(--color-slate);
-  --text-muted: var(--color-ash);
-  --border-subtle: var(--color-rule);
-  --accent-blue: var(--color-signal);
-  --accent-glow: var(--color-signal);
-  --radius-card: 2px;
-  --radius-btn: 0px;
-}

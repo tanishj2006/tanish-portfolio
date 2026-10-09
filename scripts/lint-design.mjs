@@ -10,13 +10,13 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join, relative } from "node:path";
 
 // Files still carrying v1 art direction. Violations here are REPORTED as
-// pending work but do not fail the run — this doubles as the v2 rewrite
-// checklist. Delete each entry as the component is rebuilt; when the list is
-// empty, remove it along with the v1 bridge block at the end of globals.css.
-const LEGACY = [
-  "src/components/sections/Skills.module.css",
-  "src/components/sections/Contact.module.css",
-];
+// pending work but do not fail the run.
+//
+// The v2 rewrite is complete, so this list is empty and every rule now
+// applies to the whole of src/ with no exemptions. Leave it in place: if a
+// v1 pattern is ever reintroduced it will fail the run outright, which is
+// the point.
+const LEGACY = [];
 
 const ROOT = new URL("..", import.meta.url).pathname;
 const SRC = join(ROOT, "src");
@@ -65,7 +65,7 @@ function walk(dir) {
   for (const name of readdirSync(dir)) {
     const full = join(dir, name);
     if (statSync(full).isDirectory()) out.push(...walk(full));
-    else if (/\.(tsx?|css|mts)$/.test(name)) out.push(full);
+    else if (/\.(tsx?|css|mts|svg)$/.test(name)) out.push(full);
   }
   return out;
 }
@@ -136,4 +136,8 @@ if (blocking.length) {
   process.exit(1);
 }
 
-console.log("✓ no design-token violations outside the v1 rewrite checklist");
+console.log(
+  LEGACY.length
+    ? "✓ no design-token violations outside the v1 rewrite checklist"
+    : "✓ design tokens clean — every rule applied to all of src/, no exemptions",
+);

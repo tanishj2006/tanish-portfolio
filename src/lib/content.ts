@@ -57,3 +57,55 @@ export function tokenize(line: string): Token[] {
       emphasis: word.includes("*"),
     }));
 }
+
+export const stack = {
+  act: "ACT IV",
+  actTitle: "Technical DNA",
+  index: "004",
+  eyebrow: "02 // TECHNICAL LEDGER",
+  statement:
+    "A stack is not a list of logos. These are the layers I work in and what each one is responsible for.",
+} as const;
+
+export const outro = {
+  act: "ACT V",
+  actTitle: "The Close",
+  index: "005",
+
+  // --text-mega finally earns its place. Authored breaks, same reasoning as
+  // the hero: the designer picks where a monumental line breaks.
+  headline: ["LET'S", "BUILD."],
+
+  lede: "Open to internships, freelance work and collaborations. The fastest way to reach me is email.",
+
+  // ──────────────────────────────────────────────────────────────────────
+  // ACTION REQUIRED — set a real address.
+  //
+  // Your account email is known to this session, but publishing a personal
+  // address on a public page is a different act from identifying you in a
+  // commit, and scrapers read portfolios. Put whichever address you actually
+  // want public here — many people keep a separate one for this.
+  // ──────────────────────────────────────────────────────────────────────
+  email: "you@example.com",
+
+  place: "DESIGNED & ARCHITECTED IN MUMBAI, IN",
+} as const;
+
+export type SocialLink = { n: string; label: string; handle: string; href: string };
+
+export const socials: SocialLink[] = [
+  {
+    n: "01",
+    label: "GITHUB",
+    handle: "tanishj2006",
+    href: "https://github.com/tanishj2006",
+  },
+  {
+    n: "02",
+    label: "LINKEDIN",
+    handle: "tanish-jain",
+    href: "https://www.linkedin.com/in/tanish-jain-7b37032bb/",
+  },
+  // X / Twitter: add it here with n "03" once you tell me the handle. The
+  // matrix renders whatever is in this array, so nothing else needs editing.
+];
