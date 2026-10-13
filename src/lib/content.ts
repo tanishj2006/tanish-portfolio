@@ -25,7 +25,14 @@ export const hero = {
   // last line must NOT carry its own period or it renders "SYSTEMS..".
   headline: ["FULL STACK", "SYSTEMS"],
 
-  lede: "Full-stack engineer based in Mumbai. Architecting high-throughput web platforms, distributed backends, and frame-locked digital craft.",
+  // Deliberately written to be lifted whole. It is the one sentence on the
+  // site that states the entity, the role and the place in plain third
+  // person, which is the form a search snippet or an answer engine can quote
+  // without having to assemble it from fragments. The headline above cannot
+  // do that job: "FULL STACK SYSTEMS." is a typographic object, not a claim.
+  // Every item in it is checkable against works.ts; do not add any that is
+  // not.
+  lede: "Tanish Jain is a full-stack developer in Mumbai building Next.js and TypeScript web apps, including a lighting catalogue platform, a Zoho Commerce storefront, and AI tools built on Gemini.",
 } as const;
 
 /** Technical spec card, right column of Act I. */

@@ -186,7 +186,7 @@ export default function Works() {
                       {work.image ? (
                         <Image
                           src={work.image}
-                          alt={`${work.title} interface`}
+                          alt={work.imageAlt ?? `${work.title} interface`}
                           fill
                           // The preview is half the grid from lg up and full
                           // width below, so Next generates the right srcset

@@ -22,27 +22,18 @@ export const metadata: Metadata = {
   },
   description: SITE.description,
 
-  keywords: [
-    "Tanish Jain",
-    "Full-Stack Engineer",
-    "Creative Technologist",
-    "Next.js",
-    "React 19",
-    "TypeScript",
-    "GSAP",
-    "WebGL",
-    "Three.js",
-    "Systems Design",
-    "Web Performance",
-    "Mumbai",
-    "Portfolio",
-  ],
-
   authors: [{ name: SITE.name, url: SITE_URL }],
   creator: SITE.name,
   publisher: SITE.name,
 
   alternates: { canonical: "/" },
+
+  // Search Console ownership. Left to an env var rather than hard-coded: the
+  // token is tied to one Search Console property, so committing it means a
+  // fork or a second property silently verifies against the wrong account.
+  // When NEXT_PUBLIC_GSC_TOKEN is unset Next omits the tag entirely rather
+  // than emitting an empty one.
+  verification: { google: process.env.NEXT_PUBLIC_GSC_TOKEN },
 
   // Preview deployments must not be indexed: each branch gets a public URL,
   // and indexing them competes with production for identical content.

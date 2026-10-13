@@ -11,6 +11,7 @@ import Link from "next/link";
 import { ArrowLeft, ArrowUpRight } from "lucide-react";
 import { getRepos } from "@/lib/archive";
 import { SITE } from "@/lib/site";
+import { works, WORK_COUNT } from "@/lib/works";
 
 export const metadata: Metadata = {
   // The root layout's template appends " | Tanish Jain", so writing the suffix
@@ -78,6 +79,55 @@ export default async function ArchivePage() {
             systems projects and the experiments that did not become either.
           </p>
         </div>
+
+        {/* ── Featured cases ───────────────────────────────────────── */}
+        {/* The four case pages are reachable from nowhere else. Act III
+            links straight out to the live site or the repository, so
+            without this row /work/<slug> would exist only in the sitemap,
+            and a URL with no internal link pointing at it is the weakest
+            thing you can hand a crawler. */}
+        <nav aria-label="Featured case studies" className="pb-12 md:pb-16">
+          <div className="flex items-baseline justify-between rule-b pb-2.5">
+            <span className="eyebrow">
+              FEATURED <span className="text-chalk">/ Case Notes</span>
+            </span>
+            <span className="numeric text-label-sm text-ash tracking-eyebrow-wide">
+              {WORK_COUNT}
+            </span>
+          </div>
+
+          <ul>
+            {works.map((work, i) => (
+              <li key={work.id}>
+                <Link
+                  href={`/work/${work.id}`}
+                  className="group grid gap-x-6 gap-y-1 rule-b py-4 transition-colors duration-[--duration-swift] ease-swift hover:invert-surface lg:grid-cols-12 lg:items-baseline"
+                >
+                  <span className="numeric text-label text-ash tracking-eyebrow lg:col-span-2">
+                    {String(i + 1).padStart(2, "0")} {"//"} {WORK_COUNT}
+                  </span>
+
+                  <span className="font-display text-title tracking-editorial lg:col-span-4">
+                    {work.title}
+                  </span>
+
+                  <span className="numeric text-label text-slate tracking-eyebrow uppercase lg:col-span-5">
+                    {work.category}
+                  </span>
+
+                  <span className="inline-flex items-center gap-1.5 eyebrow text-ash transition-colors duration-[--duration-swift] ease-swift group-hover:text-signal lg:col-span-1 lg:justify-end">
+                    CASE
+                    <ArrowUpRight
+                      className="size-3 rotate-45 transition-transform duration-[--duration-swift] ease-editorial group-hover:translate-x-0.5"
+                      strokeWidth={1.5}
+                      aria-hidden="true"
+                    />
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
 
         {/* ── Ledger ───────────────────────────────────────────────── */}
         {/* Column headers are desktop-only: on a phone each row stacks, and a
