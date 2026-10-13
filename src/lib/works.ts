@@ -37,6 +37,7 @@ export const works: Work[] = [
       "Edge Caching",
     ],
     live: "https://jaylaxmilighthouse.in/",
+    image: "/work/jay-laxmi.webp",
   },
   {
     id: "ambika",
@@ -52,6 +53,7 @@ export const works: Work[] = [
       "Commerce APIs",
     ],
     live: "https://www.ambikacyclestores.com/",
+    image: "/work/ambika.webp",
   },
   {
     id: "jurisbridge",
@@ -68,12 +70,12 @@ export const works: Work[] = [
       "Tailwind CSS",
     ],
     source: "https://github.com/tanishj2006/JurisBridge-AI",
+    image: "/work/jurisbridge.webp",
   },
   {
     // Narrative written from the repository's own README and package.json,
-    // not from the project name. Note for the record: this is a three-person
-    // academic project (TYCM-2, SAKEC) rather than solo work, worth stating
-    // somewhere if a reader is likely to assume otherwise.
+    // not from the project name. No screenshot by choice: this one ships as
+    // source only.
     id: "urban-incident",
     title: "Urban Incident Response",
     category: "MULTIMODAL AI & CIVIC SYSTEMS",

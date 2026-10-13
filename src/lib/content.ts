@@ -112,10 +112,6 @@ export const socials: SocialLink[] = [
     href: "https://www.linkedin.com/in/tanish-jain-7b37032bb",
   },
   {
-    // ⚠ Confirm this handle. It came through as a suggested placeholder, and
-    // it is also published in the Person JSON-LD sameAs array — a dead
-    // profile there weakens the entity link rather than strengthening it.
-    // Delete this entry if the account does not exist.
     n: "03",
     label: "X",
     handle: "tanishj52",
