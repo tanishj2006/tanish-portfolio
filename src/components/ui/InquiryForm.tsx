@@ -3,17 +3,18 @@
 //
 // Editorial inquiry form: mono labels, hairline underlines, no boxes.
 //
-// Submission has two paths and no silent failure mode:
+// Submission has three paths and no silent failure mode:
 //
-//   NEXT_PUBLIC_FORM_ENDPOINT set  -> POST JSON to it. Works as-is with a
-//     Formspree form URL. For Web3Forms, also set NEXT_PUBLIC_WEB3FORMS_KEY
-//     and it is sent as `access_key`, which is what that API expects.
-//   nothing set                    -> compose a mailto: and hand off to the
+//   NEXT_PUBLIC_WEB3FORMS_KEY set -> POST to Web3Forms. The endpoint is a
+//     constant, so this is the only variable you need to set.
+//   NEXT_PUBLIC_FORM_ENDPOINT set -> POST the raw fields to that URL instead,
+//     which keeps Formspree and anything else POST-shaped available.
+//   neither                       -> compose a mailto: and hand off to the
 //     reader's mail client, telling them that is what is happening.
 //
 // A Server Action was the other option, but it needs a mail provider and an
 // API key on the server; this keeps the site fully static and deployable with
-// no secrets, and upgrades to a real endpoint by setting one env var.
+// no secrets, and turns on by setting one environment variable.
 //
 // Zero CLS: every field reserves a fixed-height row for its error message, so
 // a message appearing cannot push the rest of the form down.
@@ -22,8 +23,12 @@ import { useId, useRef, useState } from "react";
 import { ArrowRight, Check } from "lucide-react";
 import { inquiry, outro } from "@/lib/content";
 
-const ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT;
+// Web3Forms' endpoint never varies, so hard-coding it means the access key is
+// the only thing to configure. The key is public by design: it ships in the
+// client bundle, which is why the honeypot below matters.
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
 const WEB3FORMS_KEY = process.env.NEXT_PUBLIC_WEB3FORMS_KEY;
+const CUSTOM_ENDPOINT = process.env.NEXT_PUBLIC_FORM_ENDPOINT;
 
 type Fields = { name: string; email: string; type: string; message: string };
 type Errors = Partial<Record<keyof Fields, string>>;
@@ -54,6 +59,7 @@ export default function InquiryForm() {
   const [submitted, setSubmitted] = useState(false);
   const uid = useId();
   const statusRef = useRef<HTMLParagraphElement>(null);
+  const botcheckRef = useRef<HTMLInputElement>(null);
 
   const set = (key: keyof Fields) => (value: string) => {
     const next = { ...fields, [key]: value };
@@ -74,7 +80,19 @@ export default function InquiryForm() {
       return;
     }
 
-    if (!ENDPOINT) {
+    // A ticked honeypot is a bot. Report success and send nothing: telling a
+    // scraper it failed only teaches it to try again.
+    //
+    // .checked, NOT .value. An unchecked checkbox still reports value "on",
+    // so testing .value classed every genuine submission as a bot and showed
+    // the sender a confirmation for a message that was never sent.
+    const isBot = botcheckRef.current?.checked === true;
+    if (isBot) {
+      setStatus("sent");
+      return;
+    }
+
+    if (!WEB3FORMS_KEY && !CUSTOM_ENDPOINT) {
       const subject = `[${fields.type}] ${fields.name}`;
       const body = `${fields.message}\n\nFrom ${fields.name} (${fields.email})`;
       window.location.href = `mailto:${outro.email}?subject=${encodeURIComponent(
@@ -86,14 +104,51 @@ export default function InquiryForm() {
 
     setStatus("sending");
     try {
-      const res = await fetch(ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(
-          WEB3FORMS_KEY ? { ...fields, access_key: WEB3FORMS_KEY } : fields,
-        ),
-      });
-      if (!res.ok) throw new Error(String(res.status));
+      const usingWeb3Forms = Boolean(WEB3FORMS_KEY);
+
+      const res = await fetch(
+        usingWeb3Forms ? WEB3FORMS_ENDPOINT : CUSTOM_ENDPOINT!,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(
+            usingWeb3Forms
+              ? {
+                  access_key: WEB3FORMS_KEY,
+                  // Web3Forms reads `email` as the reply-to address, so
+                  // replying in the inbox goes straight back to the sender.
+                  email: fields.email,
+                  // A useful subject line is the difference between a
+                  // scannable inbox and a wall of identical rows.
+                  subject: `[${fields.type}] Portfolio inquiry from ${fields.name}`,
+                  // Undocumented keys are forwarded into the email as-is.
+                  name: fields.name,
+                  inquiry_type: fields.type,
+                  message: fields.message,
+                  botcheck: isBot,
+                }
+              : fields,
+          ),
+        },
+      );
+
+      // Web3Forms answers 400 for a bad key and 429 when rate-limited, both
+      // with success:false, and 500 with no success field at all. Checking the
+      // body as well as the status means a 200 that still reports failure
+      // cannot be shown to someone as a delivered message.
+      const json: unknown = await res.json().catch(() => null);
+      const ok = usingWeb3Forms
+        ? res.ok &&
+          typeof json === "object" &&
+          json !== null &&
+          (json as { success?: unknown }).success === true
+        : res.ok;
+
+      if (!ok) throw new Error(`submit failed: ${res.status}`);
+
       setStatus("sent");
       setFields(EMPTY);
       setSubmitted(false);
@@ -123,6 +178,18 @@ export default function InquiryForm() {
 
   return (
     <form noValidate onSubmit={onSubmit} className="flex flex-col gap-7">
+      {/* Honeypot. display:none keeps it out of the accessibility tree
+          entirely, so a screen reader never meets it; tabIndex -1 keeps it off
+          the keyboard path for anyone who overrides CSS. */}
+      <input
+        ref={botcheckRef}
+        type="checkbox"
+        name="botcheck"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        style={{ display: "none" }}
+      />
       <Field
         id={`${uid}-name`}
         index="01"
@@ -143,7 +210,12 @@ export default function InquiryForm() {
         autoComplete="email"
       />
 
-      <FieldShell id={`${uid}-type`} index="03" label="INQUIRY TYPE" error={errors.type}>
+      <FieldShell
+        id={`${uid}-type`}
+        index="03"
+        label="INQUIRY TYPE"
+        error={errors.type}
+      >
         <select
           id={`${uid}-type`}
           value={fields.type}
