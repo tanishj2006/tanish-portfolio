@@ -131,9 +131,32 @@ export default function Manifesto() {
                     }
                   >
                     {token.text}
-                    {/* A real space, outside the animated span, so word
-                        spacing never animates with the word. */}
-                    <span className="inline-block w-[0.25em]" />
+                    {/* The separator between words, and it has to do two
+                        jobs at once.
+
+                        Visually it is a fixed 0.25em box, outside the
+                        animated span so word spacing never animates with
+                        the word, and font-independent so it cannot shift
+                        when Syne swaps in over the fallback.
+
+                        But it also has to be a real space in the text, and
+                        for a long time it was not: with nothing but
+                        zero-width boxes between inline-block words, both
+                        innerText and the accessible name came back as
+                        "IstartedwithJavaandC" — unreadable to a crawler and
+                        to a screen reader alike.
+
+                        white-space: pre is what reconciles the two. The
+                        space is a real U+0020 so it lands in the text, and
+                        pre stops it being collapsed away as leading
+                        whitespace inside this inline-block (an inline
+                        formatting context root trims that otherwise). Its
+                        own advance is irrelevant because the box width is
+                        fixed, so the typography is byte-identical:
+                        verified pixel-for-pixel at 360 -> 1920. */}
+                    <span className="inline-block w-[0.25em] whitespace-pre">
+                      {" "}
+                    </span>
                   </span>
                 );
               })}

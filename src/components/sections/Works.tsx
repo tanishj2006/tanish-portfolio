@@ -18,6 +18,7 @@
 // reduced motion, with no class swap after hydration and so no flash.
 
 import { useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { useGSAPContext } from "@/hooks/useGSAPContext";
@@ -177,23 +178,30 @@ export default function Works() {
 
                   {/* ── Preview ──────────────────────────────────────── */}
                   <div className="lg:col-span-6">
-                    <div className="relative aspect-[4/3] w-full border border-rule bg-ink">
+                    {/* 16:9, not 4:3. The screenshots are 2000x1106 (1.81:1);
+                      in a 4:3 frame object-cover would crop roughly a quarter
+                      off each side and lose the navigation and page edges
+                      that make them readable as real sites. */}
+                    <div className="relative aspect-[16/9] w-full border border-rule bg-ink">
                       {work.image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <Image
                           src={work.image}
-                          alt={`${work.title} interface`}
-                          className="absolute inset-0 size-full object-cover"
+                          alt={work.imageAlt ?? `${work.title} interface`}
+                          fill
+                          // The preview is half the grid from lg up and full
+                          // width below, so Next generates the right srcset
+                          // instead of shipping a 2000px file to a phone.
+                          sizes="(min-width: 1024px) 50vw, 100vw"
+                          className="object-cover"
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center">
                           <span className="numeric text-label-sm text-ash tracking-eyebrow-wide uppercase">
-                            {work.id} / no screenshot yet
+                            {work.id} / source only
                           </span>
                         </div>
                       )}
 
-                      {/* Drafting marks, not decoration. */}
                       <CornerTicks />
                     </div>
                   </div>

@@ -13,12 +13,10 @@
 // means every preview advertises itself as canonical, and the one that is
 // wrong by a character silently tells search engines the real site is a copy.
 //
-// ⚠ VERIFY THIS: the brief gave "tanishj-portfolio.vercel.app", but the Vercel
-// project in this repo's PR deploys as "tanish-portfolio" (preview host
-// tanish-portfolio-git-…-tanishj2006s-projects.vercel.app) — no "j". If the
-// production host really is tanish-portfolio.vercel.app, the fallback below is
-// wrong. Setting NEXT_PUBLIC_SITE_URL, or leaving Vercel's system environment
-// variables exposed so step 2 applies, makes this moot.
+// The literal below is correct and confirmed: the Vercel PROJECT is named
+// "tanish-portfolio", but the domain it serves is tanishj-portfolio.vercel.app,
+// with the "j". The preview hostname omits it, which is misleading; do not
+// "fix" the fallback on the strength of a preview URL.
 
 function resolveSiteUrl(): string {
   const explicit = process.env.NEXT_PUBLIC_SITE_URL;
