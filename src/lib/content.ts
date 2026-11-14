@@ -32,7 +32,7 @@ export const hero = {
   // do that job: "FULL STACK SYSTEMS." is a typographic object, not a claim.
   // Every item in it is checkable against works.ts; do not add any that is
   // not.
-  lede: "Tanish Jain is a full-stack developer in Mumbai building Next.js and TypeScript web apps, including a lighting catalogue platform, a Zoho Commerce storefront, and AI tools built on Gemini.",
+  lede: "Tanish Jain is a full-stack developer in Mumbai building Next.js and TypeScript web apps: a lighting catalogue platform, a Zoho Commerce storefront, a bilingual course on the Indian stock market, and AI tools built on Gemini.",
 } as const;
 
 /** Technical spec card, right column of Act I. */
