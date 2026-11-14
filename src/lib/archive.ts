@@ -37,6 +37,10 @@ type GitHubRepo = {
 
 /** Used when the API is unreachable, rate-limited, or returns junk. */
 const FALLBACK: Repo[] = [
+  // Order matters: this list is returned verbatim, so it has to stay sorted
+  // newest first the way the live path sorts.
+  ["The-9-Percent-Club", "2026-11-14"],
+  ["tanish-portfolio", "2026-10-13"],
   ["Urban-Incident-Response", "2026-10-06"],
   ["StreamVerse", "2026-10-05"],
   ["JurisBridge-AI", "2026-09-25"],

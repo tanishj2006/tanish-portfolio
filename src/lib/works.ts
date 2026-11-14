@@ -78,6 +78,28 @@ export const works: Work[] = [
       'Ambika Cycle Stores storefront: a road bike on a turbo trainer behind the headline "Train Smarter. Ride Stronger.", above the Launch Collection product grid.',
   },
   {
+    id: "nine-percent-club",
+    title: "The 9% Club",
+    category: "SCROLL NARRATIVE & INVESTOR EDUCATION",
+    year: "2026",
+    updated: "2026-11-14",
+    narrative:
+      "A nine chapter course for Indian beginners that argues with arithmetic instead of advice. The reader starts with \u20b92,000 and a counter follows that money through every chapter, until brokerage, STT, stamp duty and GST show why \u20b92,000 cannot trade at all. Every figure comes from a cost engine ported from my NSE backtester and tested against a reference dataset, so the copy cannot drift from the numbers that produced it. English and Hindi are both first class, because the people who need this are not reading finance in English.",
+    stack: [
+      "Next.js 15",
+      "TypeScript",
+      "GSAP ScrollTrigger",
+      "Lenis",
+      "next-intl",
+      "Playwright",
+    ],
+    live: "https://the-9-percent-club.vercel.app/",
+    source: "https://github.com/tanishj2006/The-9-Percent-Club",
+    image: "/work/nine-percent-club.webp",
+    imageAlt:
+      'The 9% Club home page: the title over the line "Most traders lose money. Here\'s the arithmetic.", a chapter selector and a running \u20b92,000 counter in the header, beside a grid of 100 figures where 91 are filled in.',
+  },
+  {
     id: "jurisbridge",
     title: "JurisBridge AI",
     category: "AI SYSTEMS & LEGAL INTELLIGENCE",
